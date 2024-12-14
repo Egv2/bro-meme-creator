@@ -30,8 +30,6 @@ You should be able to access the application at `http://localhost:3001`.
 
 This project is built with React.
 
-**All of the functionality has already been built.** Your job is to add the CSS. You're also allowed to tweak the JSX (HTML) as needed. But you shouldn't need to fuss with any advanced React stuff.
-
 This project uses **CSS Modules**. CSS modules are ultimately very similar to vanilla CSS, but the classes are applied in JS. Here's an example:
 
 ```css
