@@ -1,0 +1,45 @@
+.itemSelector {
+  padding: 24px;
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 32px;
+}
+
+.title {
+  margin: 0;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.metadata {
+  font-size: 0.875rem;
+  color: hsl(0deg, 0%, 30%);
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.arrowButton {
+  flex: 1;
+  padding: 8px 24px;
+  font-size: 1.5rem;
+  border: 2px solid hsl(0deg, 0%, 5%);
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.arrowButton:hover {
+  background: hsl(0deg, 0%, 95%);
+}
+
+.arrowButton:active {
+  background: hsl(0deg, 0%, 90%);
+  transform: translateY(1px);
+}
