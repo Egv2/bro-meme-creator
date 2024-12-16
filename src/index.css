@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Brother-Bold";
+  src: url("./BROTHER-Bold.ttf") format("ttf");
+  font-weight: bold;
+  font-style: normal;
+}
+
 html,
 body,
 #root {
@@ -5,14 +12,14 @@ body,
 }
 
 body {
-  background-color: hsl(180deg, 25%, 92%);
+  background-color: hsl(180, 6%, 7%);
   margin: 0;
 }
 
 *,
 *:before,
 *:after {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Brother-Bold", sans-serif;
   box-sizing: border-box;
 }
 

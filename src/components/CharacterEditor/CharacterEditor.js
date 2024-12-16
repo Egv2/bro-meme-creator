@@ -79,11 +79,53 @@ function CharacterEditor() {
     setter(currentValue === maxValue - 1 ? 0 : currentValue + 1);
   };
 
+  const handleDownload = () => {
+    const characterWrapper = document.querySelector(
+      `.${styles.characterWrapper}`
+    );
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // Canvas boyutunu ayarla
+    canvas.width = 800;
+    canvas.height = 800;
+
+    // Tüm görselleri yükle ve canvas'a çiz
+    const images = characterWrapper.querySelectorAll("img");
+    let loadedImages = 0;
+
+    const drawImages = () => {
+      images.forEach((img) => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      });
+
+      // Canvas'ı PNG olarak indir
+      const link = document.createElement("a");
+      link.download = "my-bro.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    };
+
+    images.forEach((img) => {
+      const newImg = new Image();
+      newImg.crossOrigin = "Anonymous";
+      newImg.onload = () => {
+        loadedImages++;
+        if (loadedImages === images.length) {
+          drawImages();
+        }
+      };
+      newImg.src = img.src;
+    });
+  };
+
   return (
     <main className={styles.characterEditor}>
       <MaxWidthWrapper className={styles.maxWidthWrapper}>
         <header className={styles.header}>
-          <h1 className={styles.title}>$BRO CREATOR</h1>
+          <h1 className={styles.title}>
+            $BRO CREATOR <span style={{ fontSize: "smaller" }}>(BETA)</span>
+          </h1>
           <p className={styles.description}>
             Use the controller below to customize your $BRO.{" "}
           </p>
@@ -115,6 +157,10 @@ function CharacterEditor() {
             onPrevious={() => handlePrevious(setOutfit, outfit, numOutfitFiles)}
             onNext={() => handleNext(setOutfit, outfit, numOutfitFiles)}
           />
+
+          <button onClick={handleDownload} className={styles.downloadButton}>
+            Download $BRO
+          </button>
         </div>
       </MaxWidthWrapper>
 

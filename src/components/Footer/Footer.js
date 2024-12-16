@@ -5,15 +5,7 @@ import styles from "./Footer.module.css";
 const Footer = () => {
   return (
     <footer className={styles.footer}>
-      Made with love by{" "}
-      <a
-        href="https://t.me/Muny0x"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ textDecoration: "none" }}
-      >
-        Munky
-      </a>
+      Made with ❤️ for all the bros out there.
     </footer>
   );
 };
