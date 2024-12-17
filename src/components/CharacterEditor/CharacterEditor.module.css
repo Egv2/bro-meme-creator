@@ -1,5 +1,5 @@
 .characterEditor {
-  padding-top: 128px;
+  padding-top: 60px;
   padding-bottom: 64px;
   display: flex;
   justify-content: space-between;
@@ -41,13 +41,23 @@
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: sticky;
   top: 32px;
-  /* height: fit-content; */
   min-height: 600px;
+}
+
+.previewSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.previewTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: #333;
 }
 
 .controlColumn {
@@ -59,7 +69,7 @@
 }
 
 .downloadButton {
-  width: 100%;
+  width: 80%;
   padding: 12px;
   font-size: 1.1rem;
   background-color: #000;
@@ -68,7 +78,8 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: 16px;
+  margin-top: auto;
+  margin-bottom: 16px;
 }
 
 .downloadButton:hover {
@@ -77,4 +88,92 @@
 
 .downloadButton:active {
   transform: translateY(1px);
+}
+
+.accessorySection {
+  margin-bottom: 20px;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.variantSelector {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 4px;
+  margin-top: 8px;
+  padding: 12px;
+}
+
+.variantSelector.closed {
+  display: none;
+}
+
+.variantSelector.open {
+  display: block;
+}
+
+.variantWrapper {
+  margin-top: 8px;
+}
+
+.variantToggle {
+  width: 100%;
+  padding: 8px 12px;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.variantToggle:hover {
+  background: #f0f0f0;
+}
+
+.variantControls {
+  margin-top: 8px;
+  padding: 12px;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.variantButton {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 1.5rem;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.variantButton:hover {
+  background: #f0f0f0;
+}
+
+.variantButton:active {
+  transform: translateY(1px);
+}
+
+.variantCount {
+  font-size: 1rem;
+  font-weight: 500;
+  min-width: 100px;
+  text-align: center;
 }

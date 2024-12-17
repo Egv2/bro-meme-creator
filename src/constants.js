@@ -3,9 +3,9 @@ export const numHeads = 12;
 export const numFaces = 9;
 export const numAccessories = 6;
 export const numBase = 1;
-export const numHair = 5;
-export const numEyewear = 4;
-export const numOutfit = 6;
+export const numHair = 7;
+export const numEyewear = 1;
+export const numOutfit = 1;
 
 export const skinColors = [
   { label: "Dark Espresso", color: "hsl(26deg, 48%, 28%)" },

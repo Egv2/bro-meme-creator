@@ -43,23 +43,119 @@ function CharacterEditor() {
   const [hair, setHair] = React.useState(defaultHair);
   const [eyewear, setEyewear] = React.useState(defaultEyewear);
   const [outfit, setOutfit] = React.useState(defaultOutfit);
-  const [numHairFiles, setNumHairFiles] = React.useState(5);
-  const [numEyewearFiles, setNumEyewearFiles] = React.useState(4);
-  const [numOutfitFiles, setNumOutfitFiles] = React.useState(6);
+
+  // Varyasyon state'leri
+  const [hairVariants, setHairVariants] = React.useState({});
+  const [eyewearVariants, setEyewearVariants] = React.useState({});
+  const [outfitVariants, setOutfitVariants] = React.useState({});
+
+  // Dropdown state'leri
+  const [openHairVariant, setOpenHairVariant] = React.useState(false);
+  const [openEyewearVariant, setOpenEyewearVariant] = React.useState(false);
+  const [openOutfitVariant, setOpenOutfitVariant] = React.useState(false);
+
+  // Dosya sayıları
+  const [numHairFiles, setNumHairFiles] = React.useState(0);
+  const [numEyewearFiles, setNumEyewearFiles] = React.useState(0);
+  const [numOutfitFiles, setNumOutfitFiles] = React.useState(0);
+
+  // Her aksesuar için varyasyon sayısı
+  const [variantCounts, setVariantCounts] = React.useState({
+    hair: [],
+    eyewear: [],
+    outfit: [],
+  });
 
   useEffect(() => {
     async function fetchFileCounts() {
-      const hairCount = await getFileCount("hair");
-      const eyewearCount = await getFileCount("eyewear");
-      const outfitCount = await getFileCount("outfit");
+      const hairData = await getFileCount("hair");
+      const eyewearData = await getFileCount("eyewear");
+      const outfitData = await getFileCount("outfit");
 
-      setNumHairFiles(hairCount);
-      setNumEyewearFiles(eyewearCount);
-      setNumOutfitFiles(outfitCount);
+      setNumHairFiles(hairData.count);
+      setNumEyewearFiles(eyewearData.count);
+      setNumOutfitFiles(outfitData.count);
+
+      setVariantCounts({
+        hair: hairData.variants,
+        eyewear: eyewearData.variants,
+        outfit: outfitData.variants,
+      });
+
+      // Her element için varsayılan varyant state'lerini oluştur
+      const initialHairVariants = {};
+      const initialEyewearVariants = {};
+      const initialOutfitVariants = {};
+
+      // Her dosya için varyant state'i oluştur
+      hairData.variants.forEach((variant) => {
+        const fileNumber = parseInt(variant.file.split("-")[1]) - 1;
+        initialHairVariants[fileNumber] = 0;
+      });
+
+      eyewearData.variants.forEach((variant) => {
+        const fileNumber = parseInt(variant.file.split("-")[1]) - 1;
+        initialEyewearVariants[fileNumber] = 0;
+      });
+
+      outfitData.variants.forEach((variant) => {
+        const fileNumber = parseInt(variant.file.split("-")[1]) - 1;
+        initialOutfitVariants[fileNumber] = 0;
+      });
+
+      setHairVariants(initialHairVariants);
+      setEyewearVariants(initialEyewearVariants);
+      setOutfitVariants(initialOutfitVariants);
+
+      console.log("Variant counts:", {
+        hair: hairData.variants,
+        eyewear: eyewearData.variants,
+        outfit: outfitData.variants,
+      });
     }
 
     fetchFileCounts();
   }, []);
+
+  // Seçili öğe için variant sayısını al
+  const getVariantCount = (type, index) => {
+    const variants = variantCounts[type];
+    console.log(`Checking variants for ${type}-${index + 1}:`, variants);
+
+    if (!variants) return 0;
+
+    // Dosya adını oluştur (örn: "hair-1", "eyewear-1", "outfit-1")
+    const fileName = `${type}-${index + 1}`;
+    console.log("Looking for file:", fileName);
+
+    // Bu dosya adına sahip varyantı bul
+    const fileVariant = variants.find((v) => v.file === fileName);
+    console.log("Found variant:", fileVariant);
+
+    return fileVariant ? fileVariant.variantCount : 0;
+  };
+
+  // Her element türü için ayrı variant değişiklik fonksiyonları
+  const handleHairVariantChange = (newValue) => {
+    setHairVariants((prev) => ({
+      ...prev,
+      [hair]: newValue,
+    }));
+  };
+
+  const handleEyewearVariantChange = (newValue) => {
+    setEyewearVariants((prev) => ({
+      ...prev,
+      [eyewear]: newValue,
+    }));
+  };
+
+  const handleOutfitVariantChange = (newValue) => {
+    setOutfitVariants((prev) => ({
+      ...prev,
+      [outfit]: newValue,
+    }));
+  };
 
   const handleRandomize = () => {
     setBody(Math.floor(Math.random() * numBodies));
@@ -132,50 +228,180 @@ function CharacterEditor() {
         </header>
 
         <div className={styles.controlColumn}>
-          <ItemSelector
-            title="Hair"
-            current={hair}
-            total={numHairFiles}
-            onPrevious={() => handlePrevious(setHair, hair, numHairFiles)}
-            onNext={() => handleNext(setHair, hair, numHairFiles)}
-          />
+          <div className={styles.accessorySection}>
+            <ItemSelector
+              title="Hair"
+              current={hair}
+              total={numHairFiles}
+              onPrevious={() => handlePrevious(setHair, hair, numHairFiles)}
+              onNext={() => handleNext(setHair, hair, numHairFiles)}
+            />
+            <div className={styles.variantWrapper}>
+              <button
+                className={styles.variantToggle}
+                onClick={() => setOpenHairVariant(!openHairVariant)}
+              >
+                Variants ▼
+              </button>
+              {openHairVariant && (
+                <div className={styles.variantControls}>
+                  <button
+                    className={styles.variantButton}
+                    onClick={() =>
+                      handlePrevious(
+                        handleHairVariantChange,
+                        hairVariants[hair] || 0,
+                        getVariantCount("hair", hair)
+                      )
+                    }
+                  >
+                    ◀
+                  </button>
+                  <span className={styles.variantCount}>
+                    Variant {hairVariants[hair] + 1}
+                  </span>
+                  <button
+                    className={styles.variantButton}
+                    onClick={() =>
+                      handleNext(
+                        handleHairVariantChange,
+                        hairVariants[hair] || 0,
+                        getVariantCount("hair", hair)
+                      )
+                    }
+                  >
+                    ▶
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
 
-          <ItemSelector
-            title="Eyewear"
-            current={eyewear}
-            total={numEyewearFiles}
-            onPrevious={() =>
-              handlePrevious(setEyewear, eyewear, numEyewearFiles)
-            }
-            onNext={() => handleNext(setEyewear, eyewear, numEyewearFiles)}
-          />
+          <div className={styles.accessorySection}>
+            <ItemSelector
+              title="Eyewear"
+              current={eyewear}
+              total={numEyewearFiles}
+              onPrevious={() =>
+                handlePrevious(setEyewear, eyewear, numEyewearFiles)
+              }
+              onNext={() => handleNext(setEyewear, eyewear, numEyewearFiles)}
+            />
+            <div className={styles.variantWrapper}>
+              <button
+                className={styles.variantToggle}
+                onClick={() => setOpenEyewearVariant(!openEyewearVariant)}
+              >
+                Variants ▼
+              </button>
+              {openEyewearVariant && (
+                <div className={styles.variantControls}>
+                  <button
+                    className={styles.variantButton}
+                    onClick={() =>
+                      handlePrevious(
+                        handleEyewearVariantChange,
+                        eyewearVariants[eyewear] || 0,
+                        getVariantCount("eyewear", eyewear)
+                      )
+                    }
+                  >
+                    ◀
+                  </button>
+                  <span className={styles.variantCount}>
+                    Variant {eyewearVariants[eyewear] + 1}
+                  </span>
+                  <button
+                    className={styles.variantButton}
+                    onClick={() =>
+                      handleNext(
+                        handleEyewearVariantChange,
+                        eyewearVariants[eyewear] || 0,
+                        getVariantCount("eyewear", eyewear)
+                      )
+                    }
+                  >
+                    ▶
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
 
-          <ItemSelector
-            title="Outfit"
-            current={outfit}
-            total={numOutfitFiles}
-            onPrevious={() => handlePrevious(setOutfit, outfit, numOutfitFiles)}
-            onNext={() => handleNext(setOutfit, outfit, numOutfitFiles)}
-          />
-
-          <button onClick={handleDownload} className={styles.downloadButton}>
-            Download $BRO
-          </button>
+          <div className={styles.accessorySection}>
+            <ItemSelector
+              title="Outfit"
+              current={outfit}
+              total={numOutfitFiles}
+              onPrevious={() =>
+                handlePrevious(setOutfit, outfit, numOutfitFiles)
+              }
+              onNext={() => handleNext(setOutfit, outfit, numOutfitFiles)}
+            />
+            <div className={styles.variantWrapper}>
+              <button
+                className={styles.variantToggle}
+                onClick={() => setOpenOutfitVariant(!openOutfitVariant)}
+              >
+                Variants ▼
+              </button>
+              {openOutfitVariant && (
+                <div className={styles.variantControls}>
+                  <button
+                    className={styles.variantButton}
+                    onClick={() =>
+                      handlePrevious(
+                        handleOutfitVariantChange,
+                        outfitVariants[outfit] || 0,
+                        getVariantCount("outfit", outfit)
+                      )
+                    }
+                  >
+                    ◀
+                  </button>
+                  <span className={styles.variantCount}>
+                    Variant {outfitVariants[outfit] + 1}
+                  </span>
+                  <button
+                    className={styles.variantButton}
+                    onClick={() =>
+                      handleNext(
+                        handleOutfitVariantChange,
+                        outfitVariants[outfit] || 0,
+                        getVariantCount("outfit", outfit)
+                      )
+                    }
+                  >
+                    ▶
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </MaxWidthWrapper>
 
       <div className={styles.characterWrapper}>
-        <Character
-          body={body}
-          head={head}
-          face={face}
-          accessory={accessory}
-          skinColor={skinColor}
-          clothesColor={clothesColor}
-          hair={hair}
-          eyewear={eyewear}
-          outfit={outfit}
-        />
+        <div className={styles.previewSection}>
+          <h2 className={styles.previewTitle}>Preview</h2>
+          <Character
+            body={body}
+            head={head}
+            face={face}
+            accessory={accessory}
+            skinColor={skinColor}
+            clothesColor={clothesColor}
+            hair={hair}
+            eyewear={eyewear}
+            outfit={outfit}
+            hairVariant={hairVariants[hair] || 0}
+            eyewearVariant={eyewearVariants[eyewear] || 0}
+            outfitVariant={outfitVariants[outfit] || 0}
+          />
+          <button onClick={handleDownload} className={styles.downloadButton}>
+            Download $BRO
+          </button>
+        </div>
       </div>
     </main>
   );
