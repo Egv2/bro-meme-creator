@@ -7,6 +7,7 @@ import {
   numFaces,
   numAccessories,
   clothesColors,
+  skinColors,
   defaultSkinColor,
   defaultClothesColor,
   numBase,
@@ -158,13 +159,28 @@ function CharacterEditor() {
   };
 
   const handleRandomize = () => {
-    setBody(Math.floor(Math.random() * numBodies));
-    setHead(Math.floor(Math.random() * numHeads));
-    setFace(Math.floor(Math.random() * numFaces));
-    setAccessory(Math.floor(Math.random() * numAccessories));
-    setClothesColor(
-      clothesColors[Math.floor(Math.random() * clothesColors.length)].color
-    );
+    // Sabit değerleri kullan
+    const newHair = Math.floor(Math.random() * numHair);
+    const newEyewear = Math.floor(Math.random() * numEyewear);
+    const newOutfit = Math.floor(Math.random() * numOutfit);
+
+    // Her bileşen için rastgele varyant seç (varsayılan olarak 3 varyant olsun)
+    const newHairVariant = Math.floor(Math.random() * 3);
+    const newEyewearVariant = Math.floor(Math.random() * 3);
+    const newOutfitVariant = Math.floor(Math.random() * 3);
+
+    // State'leri güncelle
+    setHair(newHair);
+    setEyewear(newEyewear);
+    setOutfit(newOutfit);
+
+    // Varyantları güncelle
+    setHairVariants((prev) => ({ ...prev, [newHair]: newHairVariant }));
+    setEyewearVariants((prev) => ({
+      ...prev,
+      [newEyewear]: newEyewearVariant,
+    }));
+    setOutfitVariants((prev) => ({ ...prev, [newOutfit]: newOutfitVariant }));
   };
 
   const handlePrevious = (setter, currentValue, maxValue) => {
@@ -384,6 +400,9 @@ function CharacterEditor() {
       <div className={styles.characterWrapper}>
         <div className={styles.previewSection}>
           <h2 className={styles.previewTitle}>Preview</h2>
+          <button onClick={handleRandomize} className={styles.randomizeButton}>
+            Randomize $BRO
+          </button>
           <Character
             body={body}
             head={head}

@@ -65,7 +65,24 @@
 }
 
 .randomizeButton {
-  width: 150px !important;
+  width: 45%;
+  padding: 12px;
+  font-size: 1.1rem;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 24px;
+}
+
+.randomizeButton:hover {
+  background-color: #333;
+}
+
+.randomizeButton:active {
+  transform: translateY(1px);
 }
 
 .downloadButton {
