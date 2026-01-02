@@ -1,6 +1,6 @@
 {
   "hair": {
-    "count": 11,
+    "count": 15,
     "files": [
       {
         "file": "hair-1",
@@ -12,6 +12,22 @@
       },
       {
         "file": "hair-11",
+        "variantCount": 0
+      },
+      {
+        "file": "hair-12",
+        "variantCount": 0
+      },
+      {
+        "file": "hair-13",
+        "variantCount": 0
+      },
+      {
+        "file": "hair-14",
+        "variantCount": 0
+      },
+      {
+        "file": "hair-15",
         "variantCount": 0
       },
       {
@@ -78,11 +94,27 @@
     ]
   },
   "outfit": {
-    "count": 6,
+    "count": 13,
     "files": [
       {
         "file": "outfit-1",
         "variantCount": 7
+      },
+      {
+        "file": "outfit-10",
+        "variantCount": 0
+      },
+      {
+        "file": "outfit-11",
+        "variantCount": 0
+      },
+      {
+        "file": "outfit-12",
+        "variantCount": 0
+      },
+      {
+        "file": "outfit-13",
+        "variantCount": 0
       },
       {
         "file": "outfit-2",
@@ -103,6 +135,18 @@
       {
         "file": "outfit-6",
         "variantCount": 0
+      },
+      {
+        "file": "outfit-7",
+        "variantCount": 0
+      },
+      {
+        "file": "outfit-8",
+        "variantCount": 0
+      },
+      {
+        "file": "outfit-9",
+        "variantCount": 2
       }
     ]
   }
