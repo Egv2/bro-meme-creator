@@ -1,0 +1,109 @@
+{
+  "hair": {
+    "count": 11,
+    "files": [
+      {
+        "file": "hair-1",
+        "variantCount": 10
+      },
+      {
+        "file": "hair-10",
+        "variantCount": 0
+      },
+      {
+        "file": "hair-11",
+        "variantCount": 0
+      },
+      {
+        "file": "hair-2",
+        "variantCount": 0
+      },
+      {
+        "file": "hair-3",
+        "variantCount": 5
+      },
+      {
+        "file": "hair-4",
+        "variantCount": 2
+      },
+      {
+        "file": "hair-5",
+        "variantCount": 3
+      },
+      {
+        "file": "hair-6",
+        "variantCount": 0
+      },
+      {
+        "file": "hair-7",
+        "variantCount": 7
+      },
+      {
+        "file": "hair-8",
+        "variantCount": 3
+      },
+      {
+        "file": "hair-9",
+        "variantCount": 0
+      }
+    ]
+  },
+  "eyewear": {
+    "count": 6,
+    "files": [
+      {
+        "file": "eyewear-1",
+        "variantCount": 14
+      },
+      {
+        "file": "eyewear-2",
+        "variantCount": 5
+      },
+      {
+        "file": "eyewear-3",
+        "variantCount": 7
+      },
+      {
+        "file": "eyewear-4",
+        "variantCount": 6
+      },
+      {
+        "file": "eyewear-5",
+        "variantCount": 4
+      },
+      {
+        "file": "eyewear-6",
+        "variantCount": 6
+      }
+    ]
+  },
+  "outfit": {
+    "count": 6,
+    "files": [
+      {
+        "file": "outfit-1",
+        "variantCount": 7
+      },
+      {
+        "file": "outfit-2",
+        "variantCount": 0
+      },
+      {
+        "file": "outfit-3",
+        "variantCount": 3
+      },
+      {
+        "file": "outfit-4",
+        "variantCount": 3
+      },
+      {
+        "file": "outfit-5",
+        "variantCount": 0
+      },
+      {
+        "file": "outfit-6",
+        "variantCount": 0
+      }
+    ]
+  }
+}

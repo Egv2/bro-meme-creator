@@ -13,37 +13,19 @@ import {
 import getFileCount from "../../utils/getFileCount";
 
 import {
-  numBodies,
-  numHeads,
-  numFaces,
-  numAccessories,
   clothesColors,
   skinColors,
   defaultSkinColor,
   defaultClothesColor,
-  numBase,
-  numHair,
-  numEyewear,
-  numOutfit,
   defaultHair,
   defaultEyewear,
   defaultOutfit,
 } from "../../constants";
 import Character from "../Character";
 import MaxWidthWrapper from "../MaxWidthWrapper";
-import ControlPane from "../ControlPane";
-import ToggleButton from "../ToggleButton";
 import ItemSelector from "../ItemSelector";
 import TabNavigation from "../TabNavigation";
 
-import {
-  bodyOptions,
-  headOptions,
-  faceOptions,
-  accessoryOptions,
-  skinColorOptions,
-  clothesColorOptions,
-} from "./CharacterEditor.helpers";
 import styles from "./CharacterEditor.module.css";
 
 function CharacterEditor() {
@@ -122,12 +104,6 @@ function CharacterEditor() {
       setHairVariants(initialHairVariants);
       setEyewearVariants(initialEyewearVariants);
       setOutfitVariants(initialOutfitVariants);
-
-      console.log("Variant counts:", {
-        hair: hairData.variants,
-        eyewear: eyewearData.variants,
-        outfit: outfitData.variants,
-      });
     }
 
     fetchFileCounts();
@@ -136,17 +112,14 @@ function CharacterEditor() {
   // Seçili öğe için variant sayısını al
   const getVariantCount = (type, index) => {
     const variants = variantCounts[type];
-    console.log(`Checking variants for ${type}-${index + 1}:`, variants);
 
     if (!variants) return 0;
 
     // Dosya adını oluştur (örn: "hair-1", "eyewear-1", "outfit-1")
     const fileName = `${type}-${index + 1}`;
-    console.log("Looking for file:", fileName);
 
     // Bu dosya adına sahip varyantı bul
     const fileVariant = variants.find((v) => v.file === fileName);
-    console.log("Found variant:", fileVariant);
 
     return fileVariant ? fileVariant.variantCount : 0;
   };
@@ -174,15 +147,32 @@ function CharacterEditor() {
   };
 
   const handleRandomize = () => {
-    // Sabit değerleri kullan
-    const newHair = Math.floor(Math.random() * numHair);
-    const newEyewear = Math.floor(Math.random() * numEyewear);
-    const newOutfit = Math.floor(Math.random() * numOutfit);
+    // Manifest'ten gelen dinamik dosya sayılarını kullan
+    const hairCount = numHairFiles > 0 ? numHairFiles : 1;
+    const eyewearCount = numEyewearFiles > 0 ? numEyewearFiles : 1;
+    const outfitCount = numOutfitFiles > 0 ? numOutfitFiles : 1;
 
-    // Her bileşen için rastgele varyant seç (varsayılan olarak 3 varyant olsun)
-    const newHairVariant = Math.floor(Math.random() * 3);
-    const newEyewearVariant = Math.floor(Math.random() * 3);
-    const newOutfitVariant = Math.floor(Math.random() * 3);
+    const newHair = Math.floor(Math.random() * hairCount);
+    const newEyewear = Math.floor(Math.random() * eyewearCount);
+    const newOutfit = Math.floor(Math.random() * outfitCount);
+
+    // Her bileşen için gerçek varyant sayısına göre rastgele varyant seç
+    const hairVariantCount = getVariantCount("hair", newHair);
+    const eyewearVariantCount = getVariantCount("eyewear", newEyewear);
+    const outfitVariantCount = getVariantCount("outfit", newOutfit);
+
+    const newHairVariant =
+      hairVariantCount > 0
+        ? Math.floor(Math.random() * (hairVariantCount + 1))
+        : 0;
+    const newEyewearVariant =
+      eyewearVariantCount > 0
+        ? Math.floor(Math.random() * (eyewearVariantCount + 1))
+        : 0;
+    const newOutfitVariant =
+      outfitVariantCount > 0
+        ? Math.floor(Math.random() * (outfitVariantCount + 1))
+        : 0;
 
     // State'leri güncelle
     setHair(newHair);
@@ -270,63 +260,66 @@ function CharacterEditor() {
               onPrevious={() => handlePrevious(setHair, hair, numHairFiles)}
               onNext={() => handleNext(setHair, hair, numHairFiles)}
             />
-            <div className={styles.variantWrapper}>
-              <button
-                className={styles.variantToggle}
-                onClick={() => setOpenHairVariant(!openHairVariant)}
-              >
-                {openHairVariant ? (
-                  <>
-                    Hide Variants{" "}
-                    <CaretUp
-                      size={18}
-                      weight="bold"
-                      style={{ marginLeft: "8px" }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    Show Variants{" "}
-                    <CaretDown
-                      size={18}
-                      weight="bold"
-                      style={{ marginLeft: "8px" }}
-                    />
-                  </>
+            {getVariantCount("hair", hair) > 0 && (
+              <div className={styles.variantWrapper}>
+                <button
+                  className={styles.variantToggle}
+                  onClick={() => setOpenHairVariant(!openHairVariant)}
+                >
+                  {openHairVariant ? (
+                    <>
+                      Hide Variants{" "}
+                      <CaretUp
+                        size={18}
+                        weight="bold"
+                        style={{ marginLeft: "8px" }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      Show Variants{" "}
+                      <CaretDown
+                        size={18}
+                        weight="bold"
+                        style={{ marginLeft: "8px" }}
+                      />
+                    </>
+                  )}
+                </button>
+                {openHairVariant && (
+                  <div className={styles.variantControls}>
+                    <button
+                      className={styles.variantButton}
+                      onClick={() =>
+                        handlePrevious(
+                          handleHairVariantChange,
+                          hairVariants[hair] || 0,
+                          getVariantCount("hair", hair) + 1
+                        )
+                      }
+                    >
+                      <CaretLeft size={20} weight="bold" />
+                    </button>
+                    <span className={styles.variantCount}>
+                      Variant {(hairVariants[hair] || 0) + 1} /{" "}
+                      {getVariantCount("hair", hair) + 1}
+                    </span>
+                    <button
+                      className={styles.variantButton}
+                      onClick={() =>
+                        handleNext(
+                          handleHairVariantChange,
+                          hairVariants[hair] || 0,
+                          getVariantCount("hair", hair) + 1
+                        )
+                      }
+                    >
+                      <CaretRight size={20} weight="bold" />
+                    </button>
+                  </div>
                 )}
-              </button>
-              {openHairVariant && (
-                <div className={styles.variantControls}>
-                  <button
-                    className={styles.variantButton}
-                    onClick={() =>
-                      handlePrevious(
-                        handleHairVariantChange,
-                        hairVariants[hair] || 0,
-                        getVariantCount("hair", hair)
-                      )
-                    }
-                  >
-                    <CaretLeft size={20} weight="bold" />
-                  </button>
-                  <span className={styles.variantCount}>
-                    Variant {hairVariants[hair] + 1}
-                  </span>
-                  <button
-                    className={styles.variantButton}
-                    onClick={() =>
-                      handleNext(
-                        handleHairVariantChange,
-                        hairVariants[hair] || 0,
-                        getVariantCount("hair", hair)
-                      )
-                    }
-                  >
-                    <CaretRight size={20} weight="bold" />
-                  </button>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         );
 
@@ -342,63 +335,66 @@ function CharacterEditor() {
               }
               onNext={() => handleNext(setEyewear, eyewear, numEyewearFiles)}
             />
-            <div className={styles.variantWrapper}>
-              <button
-                className={styles.variantToggle}
-                onClick={() => setOpenEyewearVariant(!openEyewearVariant)}
-              >
-                {openEyewearVariant ? (
-                  <>
-                    Hide Variants{" "}
-                    <CaretUp
-                      size={18}
-                      weight="bold"
-                      style={{ marginLeft: "8px" }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    Show Variants{" "}
-                    <CaretDown
-                      size={18}
-                      weight="bold"
-                      style={{ marginLeft: "8px" }}
-                    />
-                  </>
+            {getVariantCount("eyewear", eyewear) > 0 && (
+              <div className={styles.variantWrapper}>
+                <button
+                  className={styles.variantToggle}
+                  onClick={() => setOpenEyewearVariant(!openEyewearVariant)}
+                >
+                  {openEyewearVariant ? (
+                    <>
+                      Hide Variants{" "}
+                      <CaretUp
+                        size={18}
+                        weight="bold"
+                        style={{ marginLeft: "8px" }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      Show Variants{" "}
+                      <CaretDown
+                        size={18}
+                        weight="bold"
+                        style={{ marginLeft: "8px" }}
+                      />
+                    </>
+                  )}
+                </button>
+                {openEyewearVariant && (
+                  <div className={styles.variantControls}>
+                    <button
+                      className={styles.variantButton}
+                      onClick={() =>
+                        handlePrevious(
+                          handleEyewearVariantChange,
+                          eyewearVariants[eyewear] || 0,
+                          getVariantCount("eyewear", eyewear) + 1
+                        )
+                      }
+                    >
+                      <CaretLeft size={20} weight="bold" />
+                    </button>
+                    <span className={styles.variantCount}>
+                      Variant {(eyewearVariants[eyewear] || 0) + 1} /{" "}
+                      {getVariantCount("eyewear", eyewear) + 1}
+                    </span>
+                    <button
+                      className={styles.variantButton}
+                      onClick={() =>
+                        handleNext(
+                          handleEyewearVariantChange,
+                          eyewearVariants[eyewear] || 0,
+                          getVariantCount("eyewear", eyewear) + 1
+                        )
+                      }
+                    >
+                      <CaretRight size={20} weight="bold" />
+                    </button>
+                  </div>
                 )}
-              </button>
-              {openEyewearVariant && (
-                <div className={styles.variantControls}>
-                  <button
-                    className={styles.variantButton}
-                    onClick={() =>
-                      handlePrevious(
-                        handleEyewearVariantChange,
-                        eyewearVariants[eyewear] || 0,
-                        getVariantCount("eyewear", eyewear)
-                      )
-                    }
-                  >
-                    <CaretLeft size={20} weight="bold" />
-                  </button>
-                  <span className={styles.variantCount}>
-                    Variant {eyewearVariants[eyewear] + 1}
-                  </span>
-                  <button
-                    className={styles.variantButton}
-                    onClick={() =>
-                      handleNext(
-                        handleEyewearVariantChange,
-                        eyewearVariants[eyewear] || 0,
-                        getVariantCount("eyewear", eyewear)
-                      )
-                    }
-                  >
-                    <CaretRight size={20} weight="bold" />
-                  </button>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         );
 
@@ -414,63 +410,66 @@ function CharacterEditor() {
               }
               onNext={() => handleNext(setOutfit, outfit, numOutfitFiles)}
             />
-            <div className={styles.variantWrapper}>
-              <button
-                className={styles.variantToggle}
-                onClick={() => setOpenOutfitVariant(!openOutfitVariant)}
-              >
-                {openOutfitVariant ? (
-                  <>
-                    Hide Variants{" "}
-                    <CaretUp
-                      size={18}
-                      weight="bold"
-                      style={{ marginLeft: "8px" }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    Show Variants{" "}
-                    <CaretDown
-                      size={18}
-                      weight="bold"
-                      style={{ marginLeft: "8px" }}
-                    />
-                  </>
+            {getVariantCount("outfit", outfit) > 0 && (
+              <div className={styles.variantWrapper}>
+                <button
+                  className={styles.variantToggle}
+                  onClick={() => setOpenOutfitVariant(!openOutfitVariant)}
+                >
+                  {openOutfitVariant ? (
+                    <>
+                      Hide Variants{" "}
+                      <CaretUp
+                        size={18}
+                        weight="bold"
+                        style={{ marginLeft: "8px" }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      Show Variants{" "}
+                      <CaretDown
+                        size={18}
+                        weight="bold"
+                        style={{ marginLeft: "8px" }}
+                      />
+                    </>
+                  )}
+                </button>
+                {openOutfitVariant && (
+                  <div className={styles.variantControls}>
+                    <button
+                      className={styles.variantButton}
+                      onClick={() =>
+                        handlePrevious(
+                          handleOutfitVariantChange,
+                          outfitVariants[outfit] || 0,
+                          getVariantCount("outfit", outfit) + 1
+                        )
+                      }
+                    >
+                      <CaretLeft size={20} weight="bold" />
+                    </button>
+                    <span className={styles.variantCount}>
+                      Variant {(outfitVariants[outfit] || 0) + 1} /{" "}
+                      {getVariantCount("outfit", outfit) + 1}
+                    </span>
+                    <button
+                      className={styles.variantButton}
+                      onClick={() =>
+                        handleNext(
+                          handleOutfitVariantChange,
+                          outfitVariants[outfit] || 0,
+                          getVariantCount("outfit", outfit) + 1
+                        )
+                      }
+                    >
+                      <CaretRight size={20} weight="bold" />
+                    </button>
+                  </div>
                 )}
-              </button>
-              {openOutfitVariant && (
-                <div className={styles.variantControls}>
-                  <button
-                    className={styles.variantButton}
-                    onClick={() =>
-                      handlePrevious(
-                        handleOutfitVariantChange,
-                        outfitVariants[outfit] || 0,
-                        getVariantCount("outfit", outfit)
-                      )
-                    }
-                  >
-                    <CaretLeft size={20} weight="bold" />
-                  </button>
-                  <span className={styles.variantCount}>
-                    Variant {outfitVariants[outfit] + 1}
-                  </span>
-                  <button
-                    className={styles.variantButton}
-                    onClick={() =>
-                      handleNext(
-                        handleOutfitVariantChange,
-                        outfitVariants[outfit] || 0,
-                        getVariantCount("outfit", outfit)
-                      )
-                    }
-                  >
-                    <CaretRight size={20} weight="bold" />
-                  </button>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         );
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Character.module.css";
 
 function Character({
@@ -15,14 +15,34 @@ function Character({
   skinColor,
   clothesColor,
 }) {
-  console.log("Current values:", {
-    hair,
-    eyewear,
-    outfit,
-    hairVariant,
-    eyewearVariant,
-    outfitVariant,
-  });
+  // Görsel yükleme durumlarını takip et
+  const [hairLoaded, setHairLoaded] = useState(true);
+  const [eyewearLoaded, setEyewearLoaded] = useState(true);
+  const [outfitLoaded, setOutfitLoaded] = useState(true);
+
+  // Görsel URL'leri
+  const hairSrc = `/elements/hair/hair-${hair + 1}${
+    hairVariant > 0 ? `-v${hairVariant + 1}` : ""
+  }.png`;
+  const eyewearSrc = `/elements/eyewear/eyewear-${eyewear + 1}${
+    eyewearVariant > 0 ? `-v${eyewearVariant + 1}` : ""
+  }.png`;
+  const outfitSrc = `/elements/outfit/outfit-${outfit + 1}${
+    outfitVariant > 0 ? `-v${outfitVariant + 1}` : ""
+  }.png`;
+
+  // URL değiştiğinde loaded state'lerini sıfırla
+  useEffect(() => {
+    setHairLoaded(true);
+  }, [hairSrc]);
+
+  useEffect(() => {
+    setEyewearLoaded(true);
+  }, [eyewearSrc]);
+
+  useEffect(() => {
+    setOutfitLoaded(true);
+  }, [outfitSrc]);
 
   return (
     <div className={styles.characterContainer}>
@@ -30,36 +50,29 @@ function Character({
         src="/elements/base/base-body.png"
         alt="Base body"
         className={styles.baseLayer}
-        onError={(e) => console.log("Base image error:", e)}
       />
-      {hair >= 0 && (
+      {hair >= 0 && hairLoaded && (
         <img
-          src={`/elements/hair/hair-${hair + 1}${
-            hairVariant > 0 ? `-v${hairVariant + 1}` : ""
-          }.png`}
+          src={hairSrc}
           alt={`Hair style ${hair}`}
           className={styles.layer}
-          onError={(e) => console.log("Hair image error:", e)}
+          onError={() => setHairLoaded(false)}
         />
       )}
-      {eyewear >= 0 && (
+      {eyewear >= 0 && eyewearLoaded && (
         <img
-          src={`/elements/eyewear/eyewear-${eyewear + 1}${
-            eyewearVariant > 0 ? `-v${eyewearVariant + 1}` : ""
-          }.png`}
+          src={eyewearSrc}
           alt={`Eyewear style ${eyewear}`}
           className={styles.layer}
-          onError={(e) => console.log("Eyewear image error:", e)}
+          onError={() => setEyewearLoaded(false)}
         />
       )}
-      {outfit >= 0 && (
+      {outfit >= 0 && outfitLoaded && (
         <img
-          src={`/elements/outfit/outfit-${outfit + 1}${
-            outfitVariant > 0 ? `-v${outfitVariant + 1}` : ""
-          }.png`}
+          src={outfitSrc}
           alt={`Outfit style ${outfit}`}
           className={styles.layer}
-          onError={(e) => console.log("Outfit image error:", e)}
+          onError={() => setOutfitLoaded(false)}
         />
       )}
     </div>

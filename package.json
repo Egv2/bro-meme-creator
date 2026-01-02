@@ -31,7 +31,8 @@
   "private": true,
   "scripts": {
     "start": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
-    "build": "react-scripts build",
+    "build": "node scripts/generate-file-manifest.js && NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
+    "generate-manifest": "node scripts/generate-file-manifest.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   }
