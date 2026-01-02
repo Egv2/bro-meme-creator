@@ -19,7 +19,8 @@
 .footer a:hover {
   opacity: 0.9;
 }
-/* Responsive adjustments */
+
+/* Responsive */
 @media (max-width: 768px) {
   .footer {
     padding: 32px 16px;
