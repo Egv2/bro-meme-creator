@@ -5,6 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: clamp(300px, 50vh, 500px);
 }
 
 .baseLayer,
@@ -21,4 +22,17 @@
 
 .layer {
   z-index: 2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .characterContainer {
+    min-height: clamp(280px, 45vh, 400px);
+  }
+}
+
+@media (max-width: 480px) {
+  .characterContainer {
+    min-height: clamp(250px, 40vh, 350px);
+  }
 }

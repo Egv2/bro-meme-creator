@@ -1,4 +1,5 @@
 import React from "react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import styles from "./ItemSelector.module.css";
 
 function ItemSelector({ title, current, total, onPrevious, onNext }) {
@@ -17,7 +18,9 @@ function ItemSelector({ title, current, total, onPrevious, onNext }) {
           className={styles.arrowButton}
           aria-label="Önceki"
         >
-          ←
+          <span>
+            <CaretLeft size={24} weight="bold" />
+          </span>
         </button>
 
         <button
@@ -25,7 +28,9 @@ function ItemSelector({ title, current, total, onPrevious, onNext }) {
           className={styles.arrowButton}
           aria-label="Sonraki"
         >
-          →
+          <span>
+            <CaretRight size={24} weight="bold" />
+          </span>
         </button>
       </div>
     </div>

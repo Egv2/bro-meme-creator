@@ -1,26 +1,49 @@
 .controlPane {
-  padding: 24px;
-  /* Optical centering */
-  padding-top: 18px;
-  background-color: white;
+  padding: clamp(16px, 2.5vh, 20px);
+  padding-top: clamp(14px, 2vh, 18px);
+  background-color: hsl(0deg, 0%, 98%);
   border-radius: 8px;
-  /*
-    HACK: Margin on an outer bound like this is
-    a little gross, but we haven't seen the tools
-    to deal with it yet!
-  */
-  margin-bottom: 32px;
+  margin-bottom: clamp(16px, 2vh, 20px);
+  border: 1px solid hsl(0deg, 0%, 92%);
 }
 
 .title {
   margin: 0;
-  /* Optical centering */
-  margin-bottom: -4px;
+  margin-bottom: -2px;
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
 }
 
 .metadata {
-  margin-left: 16px;
-  font-size: 0.875rem;
+  margin-left: clamp(12px, 2vw, 16px);
+  font-size: clamp(0.8rem, 1.2vw, 0.875rem);
   font-weight: 400;
-  color: hsl(0deg, 0%, 30%);
+  color: hsl(0deg, 0%, 45%);
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .controlPane {
+    padding: 16px;
+    padding-top: 14px;
+    margin-bottom: 16px;
+  }
+
+  .title {
+    font-size: 1.05rem;
+  }
+
+  .metadata {
+    font-size: 0.8rem;
+    margin-left: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .controlPane {
+    padding: 12px;
+    padding-top: 10px;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
 }

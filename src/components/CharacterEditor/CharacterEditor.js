@@ -1,4 +1,15 @@
 import React, { useEffect } from "react";
+import {
+  Scissors,
+  Eyeglasses,
+  TShirt,
+  CaretLeft,
+  CaretRight,
+  CaretDown,
+  CaretUp,
+  DownloadSimple,
+  Shuffle,
+} from "@phosphor-icons/react";
 import getFileCount from "../../utils/getFileCount";
 
 import {
@@ -23,6 +34,7 @@ import MaxWidthWrapper from "../MaxWidthWrapper";
 import ControlPane from "../ControlPane";
 import ToggleButton from "../ToggleButton";
 import ItemSelector from "../ItemSelector";
+import TabNavigation from "../TabNavigation";
 
 import {
   bodyOptions,
@@ -44,6 +56,9 @@ function CharacterEditor() {
   const [hair, setHair] = React.useState(defaultHair);
   const [eyewear, setEyewear] = React.useState(defaultEyewear);
   const [outfit, setOutfit] = React.useState(defaultOutfit);
+
+  // Tab state
+  const [activeTab, setActiveTab] = React.useState("hair");
 
   // Varyasyon state'leri
   const [hairVariants, setHairVariants] = React.useState({});
@@ -231,22 +246,25 @@ function CharacterEditor() {
     });
   };
 
-  return (
-    <main className={styles.characterEditor}>
-      <MaxWidthWrapper className={styles.maxWidthWrapper}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>
-            $BRO CREATOR <span style={{ fontSize: "smaller" }}>(BETA)</span>
-          </h1>
-          <p className={styles.description}>
-            Use the controller below to customize your $BRO.{" "}
-          </p>
-        </header>
+  // Tab konfigürasyonu
+  const tabs = [
+    { id: "hair", label: "Hair", icon: <Scissors size={24} weight="bold" /> },
+    {
+      id: "eyewear",
+      label: "Eyewear",
+      icon: <Eyeglasses size={24} weight="bold" />,
+    },
+    { id: "outfit", label: "Outfit", icon: <TShirt size={24} weight="bold" /> },
+  ];
 
-        <div className={styles.controlColumn}>
-          <div className={styles.accessorySection}>
+  // Aktif tab'ın içeriğini render et
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "hair":
+        return (
+          <div className={styles.tabContent}>
             <ItemSelector
-              title="Hair"
+              title="Hair Style"
               current={hair}
               total={numHairFiles}
               onPrevious={() => handlePrevious(setHair, hair, numHairFiles)}
@@ -257,7 +275,25 @@ function CharacterEditor() {
                 className={styles.variantToggle}
                 onClick={() => setOpenHairVariant(!openHairVariant)}
               >
-                Variants ▼
+                {openHairVariant ? (
+                  <>
+                    Hide Variants{" "}
+                    <CaretUp
+                      size={18}
+                      weight="bold"
+                      style={{ marginLeft: "8px" }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    Show Variants{" "}
+                    <CaretDown
+                      size={18}
+                      weight="bold"
+                      style={{ marginLeft: "8px" }}
+                    />
+                  </>
+                )}
               </button>
               {openHairVariant && (
                 <div className={styles.variantControls}>
@@ -271,7 +307,7 @@ function CharacterEditor() {
                       )
                     }
                   >
-                    ◀
+                    <CaretLeft size={20} weight="bold" />
                   </button>
                   <span className={styles.variantCount}>
                     Variant {hairVariants[hair] + 1}
@@ -286,16 +322,19 @@ function CharacterEditor() {
                       )
                     }
                   >
-                    ▶
+                    <CaretRight size={20} weight="bold" />
                   </button>
                 </div>
               )}
             </div>
           </div>
+        );
 
-          <div className={styles.accessorySection}>
+      case "eyewear":
+        return (
+          <div className={styles.tabContent}>
             <ItemSelector
-              title="Eyewear"
+              title="Eyewear Style"
               current={eyewear}
               total={numEyewearFiles}
               onPrevious={() =>
@@ -308,7 +347,25 @@ function CharacterEditor() {
                 className={styles.variantToggle}
                 onClick={() => setOpenEyewearVariant(!openEyewearVariant)}
               >
-                Variants ▼
+                {openEyewearVariant ? (
+                  <>
+                    Hide Variants{" "}
+                    <CaretUp
+                      size={18}
+                      weight="bold"
+                      style={{ marginLeft: "8px" }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    Show Variants{" "}
+                    <CaretDown
+                      size={18}
+                      weight="bold"
+                      style={{ marginLeft: "8px" }}
+                    />
+                  </>
+                )}
               </button>
               {openEyewearVariant && (
                 <div className={styles.variantControls}>
@@ -322,7 +379,7 @@ function CharacterEditor() {
                       )
                     }
                   >
-                    ◀
+                    <CaretLeft size={20} weight="bold" />
                   </button>
                   <span className={styles.variantCount}>
                     Variant {eyewearVariants[eyewear] + 1}
@@ -337,16 +394,19 @@ function CharacterEditor() {
                       )
                     }
                   >
-                    ▶
+                    <CaretRight size={20} weight="bold" />
                   </button>
                 </div>
               )}
             </div>
           </div>
+        );
 
-          <div className={styles.accessorySection}>
+      case "outfit":
+        return (
+          <div className={styles.tabContent}>
             <ItemSelector
-              title="Outfit"
+              title="Outfit Style"
               current={outfit}
               total={numOutfitFiles}
               onPrevious={() =>
@@ -359,7 +419,25 @@ function CharacterEditor() {
                 className={styles.variantToggle}
                 onClick={() => setOpenOutfitVariant(!openOutfitVariant)}
               >
-                Variants ▼
+                {openOutfitVariant ? (
+                  <>
+                    Hide Variants{" "}
+                    <CaretUp
+                      size={18}
+                      weight="bold"
+                      style={{ marginLeft: "8px" }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    Show Variants{" "}
+                    <CaretDown
+                      size={18}
+                      weight="bold"
+                      style={{ marginLeft: "8px" }}
+                    />
+                  </>
+                )}
               </button>
               {openOutfitVariant && (
                 <div className={styles.variantControls}>
@@ -373,7 +451,7 @@ function CharacterEditor() {
                       )
                     }
                   >
-                    ◀
+                    <CaretLeft size={20} weight="bold" />
                   </button>
                   <span className={styles.variantCount}>
                     Variant {outfitVariants[outfit] + 1}
@@ -388,21 +466,43 @@ function CharacterEditor() {
                       )
                     }
                   >
-                    ▶
+                    <CaretRight size={20} weight="bold" />
                   </button>
                 </div>
               )}
             </div>
           </div>
-        </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <main className={styles.characterEditor}>
+      <MaxWidthWrapper className={styles.maxWidthWrapper}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>
+            $BRO CREATOR <span style={{ fontSize: "smaller" }}>(BETA)</span>
+          </h1>
+          <p className={styles.description}>
+            Use the tabs below to customize your $BRO.
+          </p>
+        </header>
+
+        <TabNavigation
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+
+        <div className={styles.controlColumn}>{renderTabContent()}</div>
       </MaxWidthWrapper>
 
       <div className={styles.characterWrapper}>
         <div className={styles.previewSection}>
           <h2 className={styles.previewTitle}>Preview</h2>
-          <button onClick={handleRandomize} className={styles.randomizeButton}>
-            Randomize $BRO
-          </button>
           <Character
             body={body}
             head={head}
@@ -417,9 +517,27 @@ function CharacterEditor() {
             eyewearVariant={eyewearVariants[eyewear] || 0}
             outfitVariant={outfitVariants[outfit] || 0}
           />
-          <button onClick={handleDownload} className={styles.downloadButton}>
-            Download $BRO
-          </button>
+          <div className={styles.buttonRow}>
+            <button
+              onClick={handleRandomize}
+              className={styles.randomizeButton}
+            >
+              <Shuffle
+                size={20}
+                weight="bold"
+                style={{ letterSpacing: "2px", marginRight: "8px" }}
+              />
+              Randomize $BRO
+            </button>
+            <button onClick={handleDownload} className={styles.downloadButton}>
+              <DownloadSimple
+                size={20}
+                weight="bold"
+                style={{ marginRight: "8px" }}
+              />
+              Download $BRO
+            </button>
+          </div>
         </div>
       </div>
     </main>

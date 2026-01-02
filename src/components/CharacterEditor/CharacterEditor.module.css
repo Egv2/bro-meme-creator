@@ -1,117 +1,172 @@
 .characterEditor {
-  padding-top: 60px;
-  padding-bottom: 64px;
+  min-height: calc(100vh - 180px);
+  padding: clamp(16px, 3vh, 32px) clamp(16px, 2vw, 24px);
   display: flex;
-  justify-content: space-between;
-  gap: 32px;
-  max-width: 1200px;
+  justify-content: center;
+  align-items: stretch;
+  gap: clamp(16px, 2vw, 24px);
+  max-width: 1400px;
   margin: 0 auto;
 }
 
 .maxWidthWrapper {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  flex: 1;
+  min-width: 0;
   background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: clamp(16px, 2vw, 20px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
 }
 
 .header {
-  padding-bottom: 32px;
+  padding-bottom: clamp(16px, 2vh, 24px);
+  border-bottom: 2px solid hsl(0deg, 0%, 95%);
+  margin-bottom: clamp(16px, 2vh, 24px);
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 600;
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: clamp(8px, 1vh, 12px);
   letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 
 .description {
-  font-size: 1.25rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
   margin: 0;
+  color: hsl(0deg, 0%, 40%);
+  line-height: 1.4;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.3px;
 }
 
 .characterWrapper {
-  width: 45%;
+  flex: 0 0 clamp(320px, 38vw, 480px);
   background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: clamp(16px, 2vw, 20px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   position: sticky;
-  top: 32px;
-  min-height: 600px;
+  top: clamp(16px, 2vh, 24px);
+  align-self: flex-start;
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
 }
 
 .previewSection {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .previewTitle {
-  font-size: 1.5rem;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
   font-weight: 600;
-  margin: 0 0 24px 0;
+  margin: 0 0 clamp(12px, 2vh, 16px) 0;
   color: #333;
+  text-align: center;
 }
 
 .controlColumn {
   width: 100%;
 }
 
+.tabContent {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .randomizeButton {
-  width: 45%;
-  padding: 12px;
-  font-size: 1.1rem;
+  flex: 1;
+  padding: clamp(10px, 1.5vh, 14px) clamp(12px, 1.5vw, 16px);
+  font-size: clamp(0.9rem, 1.4vw, 1rem);
   background-color: #000;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-bottom: 24px;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  letter-spacing: 2px;
 }
 
 .randomizeButton:hover {
   background-color: #333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .randomizeButton:active {
-  transform: translateY(1px);
+  transform: translateY(0);
 }
 
 .downloadButton {
-  width: 80%;
-  padding: 12px;
-  font-size: 1.1rem;
+  flex: 1;
+  padding: clamp(10px, 1.5vh, 14px) clamp(12px, 1.5vw, 16px);
+  font-size: clamp(0.9rem, 1.4vw, 1rem);
   background-color: #000;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: auto;
-  margin-bottom: 16px;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  letter-spacing: 2px;
 }
 
 .downloadButton:hover {
   background-color: #333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .downloadButton:active {
-  transform: translateY(1px);
+  transform: translateY(0);
+}
+
+.buttonRow {
+  display: flex;
+  gap: clamp(8px, 1.5vw, 12px);
+  width: 100%;
+  margin-top: auto;
+  padding-top: clamp(12px, 2vh, 16px);
 }
 
 .accessorySection {
-  margin-bottom: 20px;
-  background: rgba(0, 0, 0, 0.1);
-  padding: 15px;
+  margin-bottom: clamp(12px, 2vh, 16px);
+  background: transparent;
+  padding: 0;
   border-radius: 8px;
+  border: none;
 }
 
 .variantSelector {
@@ -131,66 +186,221 @@
 }
 
 .variantWrapper {
-  margin-top: 8px;
+  margin-top: clamp(12px, 2vh, 16px);
 }
 
 .variantToggle {
   width: 100%;
-  padding: 8px 12px;
-  background: white;
-  border: 2px solid #000;
-  border-radius: 4px;
-  font-size: 1rem;
+  padding: clamp(10px, 1.2vh, 12px) clamp(12px, 1.5vw, 16px);
+  background: hsl(0deg, 0%, 98%);
+  border: 2px solid hsl(0deg, 0%, 90%);
+  border-radius: 8px;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
   font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  color: hsl(0deg, 0%, 30%);
 }
 
 .variantToggle:hover {
-  background: #f0f0f0;
+  background: hsl(0deg, 0%, 95%);
+  border-color: hsl(0deg, 0%, 80%);
+  transform: translateY(-1px);
+  color: hsl(0deg, 0%, 10%);
 }
 
 .variantControls {
-  margin-top: 8px;
-  padding: 12px;
-  background: white;
-  border: 2px solid #000;
-  border-radius: 4px;
+  margin-top: clamp(10px, 1.5vh, 12px);
+  padding: clamp(14px, 2vh, 16px);
+  background: hsl(0deg, 0%, 98%);
+  border: 2px solid hsl(0deg, 0%, 90%);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: clamp(14px, 2vw, 20px);
 }
 
 .variantButton {
-  width: 40px;
-  height: 40px;
+  width: clamp(40px, 5vw, 46px);
+  height: clamp(40px, 5vw, 46px);
   padding: 0;
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
   background: white;
-  border: 2px solid #000;
-  border-radius: 4px;
+  border: 2px solid hsl(0deg, 0%, 85%);
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  color: hsl(0deg, 0%, 20%);
+  font-weight: 600;
 }
 
 .variantButton:hover {
-  background: #f0f0f0;
+  background: hsl(0deg, 0%, 5%);
+  border-color: hsl(0deg, 0%, 5%);
+  color: white;
+  transform: scale(1.05);
 }
 
 .variantButton:active {
-  transform: translateY(1px);
+  transform: scale(0.98);
 }
 
 .variantCount {
-  font-size: 1rem;
-  font-weight: 500;
-  min-width: 100px;
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  font-weight: 600;
+  min-width: clamp(100px, 12vw, 120px);
   text-align: center;
+  color: hsl(0deg, 0%, 20%);
+}
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .characterEditor {
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .characterWrapper {
+    flex: 0 0 clamp(280px, 40vw, 400px);
+  }
+
+  .maxWidthWrapper {
+    max-height: calc(100vh - 160px);
+  }
+
+  .buttonRow {
+    gap: 10px;
+  }
+
+  .randomizeButton,
+  .downloadButton {
+    font-size: 0.95rem;
+    padding: 11px 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  .buttonRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .randomizeButton,
+  .downloadButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .characterEditor {
+    flex-direction: column-reverse;
+    min-height: auto;
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .maxWidthWrapper {
+    flex: 1;
+    width: 100%;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .characterWrapper {
+    flex: 0 0 auto;
+    width: 100%;
+    position: static;
+    max-height: none;
+    min-height: 400px;
+  }
+
+  .header {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+  }
+
+  .previewTitle {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .buttonRow {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .randomizeButton,
+  .downloadButton {
+    font-size: 1rem;
+    padding: 12px 16px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .characterEditor {
+    padding: 8px;
+    gap: 12px;
+  }
+
+  .maxWidthWrapper,
+  .characterWrapper {
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .accessorySection {
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+
+  .variantControls {
+    gap: 12px;
+  }
+
+  .buttonRow {
+    gap: 8px;
+  }
+
+  .randomizeButton,
+  .downloadButton {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .buttonRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .randomizeButton,
+  .downloadButton {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 10px 8px;
+  }
 }
