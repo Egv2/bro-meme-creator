@@ -255,6 +255,7 @@ function CharacterEditor() {
           <div className={styles.tabContent}>
             <ItemSelector
               title="Hair Style"
+              type="hair"
               current={hair}
               total={numHairFiles}
               onPrevious={() => handlePrevious(setHair, hair, numHairFiles)}
@@ -328,6 +329,7 @@ function CharacterEditor() {
           <div className={styles.tabContent}>
             <ItemSelector
               title="Eyewear Style"
+              type="eyewear"
               current={eyewear}
               total={numEyewearFiles}
               onPrevious={() =>
@@ -402,6 +404,7 @@ function CharacterEditor() {
         return (
           <div className={styles.tabContent}>
             <ItemSelector
+              type="outfit"
               title="Outfit Style"
               current={outfit}
               total={numOutfitFiles}
