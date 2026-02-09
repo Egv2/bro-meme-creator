@@ -13,8 +13,6 @@ import {
 import getFileCount from "../../utils/getFileCount";
 
 import {
-  clothesColors,
-  skinColors,
   defaultSkinColor,
   defaultClothesColor,
   defaultHair,
@@ -29,12 +27,12 @@ import TabNavigation from "../TabNavigation";
 import styles from "./CharacterEditor.module.css";
 
 function CharacterEditor() {
-  const [body, setBody] = React.useState(0);
-  const [head, setHead] = React.useState(0);
-  const [face, setFace] = React.useState(0);
-  const [accessory, setAccessory] = React.useState(0);
-  const [skinColor, setSkinColor] = React.useState(defaultSkinColor);
-  const [clothesColor, setClothesColor] = React.useState(defaultClothesColor);
+  const [body] = React.useState(0);
+  const [head] = React.useState(0);
+  const [face] = React.useState(0);
+  const [accessory] = React.useState(0);
+  const [skinColor] = React.useState(defaultSkinColor);
+  const [clothesColor] = React.useState(defaultClothesColor);
   const [hair, setHair] = React.useState(defaultHair);
   const [eyewear, setEyewear] = React.useState(defaultEyewear);
   const [outfit, setOutfit] = React.useState(defaultOutfit);
