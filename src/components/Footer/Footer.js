@@ -10,7 +10,7 @@ const Footer = () => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        serin was here © 2024
+        Drawn and developed with love by Serin
       </a>
     </footer>
   );

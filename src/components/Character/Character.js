@@ -8,12 +8,7 @@ function Character({
   hairVariant,
   eyewearVariant,
   outfitVariant,
-  body,
-  head,
-  face,
-  accessory,
-  skinColor,
-  clothesColor,
+  direction = "next",
 }) {
   // Görsel yükleme durumlarını takip et
   const [hairLoaded, setHairLoaded] = useState(true);
@@ -44,6 +39,10 @@ function Character({
     setOutfitLoaded(true);
   }, [outfitSrc]);
 
+  // Kayma yönüne göre animasyon sınıfı; key={src} remount'u tetikler
+  const layerAnimClass =
+    direction === "prev" ? styles.layerSlidePrev : styles.layerSlideNext;
+
   return (
     <div className={styles.characterContainer}>
       <img
@@ -53,25 +52,28 @@ function Character({
       />
       {hair >= 0 && hairLoaded && (
         <img
+          key={hairSrc}
           src={hairSrc}
           alt={`Hair style ${hair}`}
-          className={styles.layer}
+          className={`${styles.layer} ${layerAnimClass}`}
           onError={() => setHairLoaded(false)}
         />
       )}
       {eyewear >= 0 && eyewearLoaded && (
         <img
+          key={eyewearSrc}
           src={eyewearSrc}
           alt={`Eyewear style ${eyewear}`}
-          className={styles.layer}
+          className={`${styles.layer} ${layerAnimClass}`}
           onError={() => setEyewearLoaded(false)}
         />
       )}
       {outfit >= 0 && outfitLoaded && (
         <img
+          key={outfitSrc}
           src={outfitSrc}
           alt={`Outfit style ${outfit}`}
-          className={styles.layer}
+          className={`${styles.layer} ${layerAnimClass}`}
           onError={() => setOutfitLoaded(false)}
         />
       )}

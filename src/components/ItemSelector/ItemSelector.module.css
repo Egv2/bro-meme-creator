@@ -1,177 +1,179 @@
 .itemSelector {
-  padding: clamp(18px, 2.5vh, 22px);
-  background: linear-gradient(
-    135deg,
-    hsl(0deg, 0%, 99%) 0%,
-    hsl(0deg, 0%, 97%) 100%
-  );
-  border-radius: 12px;
-  margin-bottom: 0;
-  border: 2px solid hsl(0deg, 0%, 92%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s ease;
-}
-
-.itemSelector:hover {
-  border-color: hsl(0deg, 0%, 85%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: hsl(0deg, 0%, 97%);
+  border: 1.5px solid hsl(0deg, 0%, 90%);
+  border-radius: 14px;
+  padding: clamp(14px, 1.8vw, 20px);
 }
 
 .title {
-  margin: 0;
-  margin-bottom: clamp(14px, 1.8vh, 18px);
-  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-weight: 600;
-  color: hsl(0deg, 0%, 10%);
+  margin: 0 0 clamp(12px, 1.6vw, 16px);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  letter-spacing: 1.5px;
+  color: hsl(0deg, 0%, 8%);
 }
 
-.metadata {
-  font-size: clamp(0.85rem, 1.2vw, 0.9rem);
-  color: hsl(0deg, 0%, 50%);
-  white-space: nowrap;
-  font-weight: 500;
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 1.4vw, 16px);
 }
 
-.controls {
-  display: flex;
-  gap: clamp(6px, 1vw, 8px);
-}
-
-.controlGroup {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.preview {
-  height: 60px;
+.tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.5;
-  transform: scale(0.9);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(0, 0, 0, 0.03);
-  border-radius: 8px;
-  padding: 4px;
+  padding: clamp(8px, 1.2vw, 14px);
+  background: hsl(0deg, 0%, 93%);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: background 0.2s ease, border-color 0.2s ease,
+    transform 0.15s ease;
 }
 
-.controlGroup:hover .preview {
-  opacity: 1;
-  transform: scale(1);
-  background: rgba(0, 0, 0, 0.06);
+.tile:disabled {
+  pointer-events: none;
 }
 
-.preview img {
+.tile img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+button.tile {
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+button.tile:hover {
+  opacity: 1;
+  background: hsl(0deg, 0%, 89%);
+  border-color: hsl(0deg, 0%, 70%);
+  transform: translateY(-1px);
+}
+
+.currentTile {
+  background: white;
+  border-color: hsl(0deg, 0%, 8%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Slot makinesi: shuffle sırasında kareyi kaplayan dönen şerit */
+.slotStripOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow: hidden;
+  background: white;
+  border-radius: inherit;
+}
+
+.slotStrip {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  will-change: transform;
+  transition: filter 180ms ease-out;
+}
+
+.slotStrip img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  padding: 16%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.counterSpinning {
+  opacity: 0.35;
+}
+
+.navRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: clamp(12px, 1.6vw, 16px);
+  padding: 0 clamp(2px, 0.8vw, 8px);
+}
+
+.counter {
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  letter-spacing: 2px;
+  color: hsl(0deg, 0%, 40%);
+  font-weight: bold;
 }
 
 .arrowButton {
-  width: 100%;
-  flex: 1;
-  padding: clamp(10px, 1.5vh, 12px) clamp(24px, 3vw, 32px);
-  font-size: clamp(1.4rem, 2.2vw, 1.6rem);
-  border: 2px solid hsl(0deg, 0%, 10%);
-  background: white;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: clamp(44px, 6vh, 52px);
-  font-weight: 700;
-  color: hsl(0deg, 0%, 10%);
-  position: relative;
-  overflow: hidden;
-}
-
-.arrowButton::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: hsl(0deg, 0%, 5%);
-  opacity: 0;
-  transition: opacity 250ms ease;
+  border-radius: 10px;
+  transition: transform 0.15s ease;
 }
 
 .arrowButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  border-color: hsl(0deg, 0%, 5%);
-}
-
-.arrowButton:hover::before {
-  opacity: 1;
-}
-
-.arrowButton:hover {
-  color: white;
+  transform: scale(1.07);
 }
 
 .arrowButton:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transform: scale(0.97);
 }
 
-.arrowButton span {
-  position: relative;
-  z-index: 1;
+.arrowIcon {
+  width: clamp(38px, 4.5vw, 48px);
+  height: auto;
+  color: hsl(0deg, 0%, 8%);
+  display: block;
 }
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .itemSelector {
-    padding: 16px;
-    margin-bottom: 0;
-  }
 
-  .title {
-    font-size: 1.15rem;
-    margin-bottom: 14px;
-  }
+.slideNext {
+  animation: tileSlideNext 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-  .metadata {
-    font-size: 0.85rem;
-  }
+.slidePrev {
+  animation: tileSlidePrev 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-  .arrowButton {
-    padding: 12px 20px;
-    font-size: 1.4rem;
-    min-height: 48px;
+@keyframes tileSlideNext {
+  from {
+    opacity: 0;
+    transform: translateX(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tileSlidePrev {
+  from {
+    opacity: 0;
+    transform: translateX(-16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
 @media (max-width: 480px) {
-  .itemSelector {
-    padding: 14px;
+  .tile {
+    border-radius: 10px;
   }
 
-  .preview {
-    height: 40px;
+  .arrowIcon {
+    width: 36px;
   }
 
-  .title {
-    font-size: 1.05rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .controls {
-    gap: 8px;
-  }
-
-  .arrowButton {
-    padding: 10px 16px;
-    font-size: 1.3rem;
-    min-height: 46px;
+  .counter {
+    font-size: 0.9rem;
   }
 }

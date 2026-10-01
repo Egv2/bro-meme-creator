@@ -1,51 +1,40 @@
-# Bro Visited His Friend Character Creation
+# BRO CREATOR
 
-I created this character creation screen inspired by the "Bro Visited His Friend" meme, poking fun at the brainrot culture.
+Make your own BRO. Pick a hair, throw on some shades, choose a fit, hit randomize and download your bro. That is the whole app, and I am not sorry.
 
-## Mockups
+It is inspired by the "Bro Visited His Friend" meme and that wonderfully cursed hand drawn art style everyone keeps copying.
 
-Desktop:
+<img alt="Desktop-sized screenshot of the character creation screen" src="./docs/preview-img.png" style="width: 100%;" />
 
-<img alt="Desktop-sized screenshot of the character creation screen" src="./docs/mockup.png" style="width: 100%;" />
-
-## Setup Instructions
-
-This project uses create-react-app.
-
-Start by installing dependencies:
+## Run it
 
 ```
 npm install
+npm start
 ```
 
-Boot up a dev server:
+Then open http://localhost:3000. That is it.
 
-```
-npm run start
-```
+## How it works
 
-You should be able to access the application at `http://localhost:3001`.
+The whole system is built around one simple idea: the character is just stacked PNGs.
 
-## Project structure and context
+- The body is a base image. Hair, eyewear and outfit are transparent PNGs layered on top of it. What you see on screen is what you download.
+- Every item lives in `public/elements/{hair,eyewear,outfit}` and follows a naming convention like `hair-3.png`. An item can also have color variants, just add `hair-3-v2.png`, `hair-3-v3.png` and so on.
+- When you build the app, a small script scans those folders and writes `file-manifest.json` with the item count and variant count for each category.
 
-This project is built with React.
+That manifest is the single source of truth. The app never hardcodes how many items exist, it just asks the manifest. So if you want to add a new hairstyle, you drop `hair-16.png` into the folder and you are done. No components, no config, no code.
 
-This project uses **CSS Modules**. CSS modules are ultimately very similar to vanilla CSS, but the classes are applied in JS. Here's an example:
+A few other things worth knowing:
 
-```css
-/* Something.module.css */
-.wrapper {
-  width: 500px;
-}
-```
+- A preloader fetches every item image once before the app shows up, so switching between items never pops in late. Color variants keep loading quietly in the background.
+- The randomize button runs a little slot machine animation on the selection tiles, built with anime.js. The result only commits once the reels stop, so the UI never flickers.
+- Every icon in the UI is a hand drawn SVG that matches the wonky style of the character.
 
-```js
-/* Something.js */
-import styles from "./Something.module.css";
+## Using the assets
 
-function Something() {
-  return <div className={styles.wrapper}>I'll be 500px wide!</div>;
-}
-```
+The artwork is free to use for your own projects, fun stuff and memes. All I ask is a little credit: link back to [this repo](https://github.com/egv2) somewhere, and please do not sell the drawings as your own.
 
-Additionally, a few global styles can be found in `src/index.css`.
+## Built with
+
+React, Create React App, CSS Modules, anime.js and a lot of hand-drawn PNGs.
