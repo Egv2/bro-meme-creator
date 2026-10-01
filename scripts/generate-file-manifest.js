@@ -7,7 +7,6 @@ const OUTPUT_FILE = path.join(__dirname, "../public/file-manifest.json");
 function generateManifest() {
   const manifest = {};
 
-  // Her element klasörünü tara
   const directories = ["hair", "eyewear", "outfit"];
 
   directories.forEach((directory) => {
@@ -22,10 +21,8 @@ function generateManifest() {
     const files = fs.readdirSync(dirPath);
     const pngFiles = files.filter((file) => file.endsWith(".png"));
 
-    // Ana dosyaları ve varyantları ayır
     const fileInfo = {};
 
-    // Önce ana dosyaları bul
     pngFiles.forEach((file) => {
       const baseName = file.replace(".png", "");
       if (!baseName.includes("-v")) {
@@ -35,7 +32,6 @@ function generateManifest() {
       }
     });
 
-    // Sonra varyantları bul
     pngFiles.forEach((file) => {
       const baseName = file.replace(".png", "");
       if (baseName.includes("-v")) {
@@ -46,7 +42,6 @@ function generateManifest() {
       }
     });
 
-    // Manifest formatına dönüştür
     manifest[directory] = {
       count: Object.keys(fileInfo).length,
       files: Object.entries(fileInfo).map(([file, info]) => ({
@@ -58,7 +53,6 @@ function generateManifest() {
     console.log(`${directory}: ${manifest[directory].count} files found`);
   });
 
-  // JSON dosyasına yaz
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(manifest, null, 2));
   console.log(`\nManifest generated: ${OUTPUT_FILE}`);
 }

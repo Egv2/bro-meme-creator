@@ -9,13 +9,12 @@ function Character({
   eyewearVariant,
   outfitVariant,
   direction = "next",
+  shuffling = false,
 }) {
-  // Görsel yükleme durumlarını takip et
   const [hairLoaded, setHairLoaded] = useState(true);
   const [eyewearLoaded, setEyewearLoaded] = useState(true);
   const [outfitLoaded, setOutfitLoaded] = useState(true);
 
-  // Görsel URL'leri
   const hairSrc = `/elements/hair/hair-${hair + 1}${
     hairVariant > 0 ? `-v${hairVariant + 1}` : ""
   }.png`;
@@ -26,7 +25,6 @@ function Character({
     outfitVariant > 0 ? `-v${outfitVariant + 1}` : ""
   }.png`;
 
-  // URL değiştiğinde loaded state'lerini sıfırla
   useEffect(() => {
     setHairLoaded(true);
   }, [hairSrc]);
@@ -39,9 +37,12 @@ function Character({
     setOutfitLoaded(true);
   }, [outfitSrc]);
 
-  // Kayma yönüne göre animasyon sınıfı; key={src} remount'u tetikler
-  const layerAnimClass =
-    direction === "prev" ? styles.layerSlidePrev : styles.layerSlideNext;
+  // Keyed remount replays the slide; skip it while the shuffle is flashing
+  const layerAnimClass = shuffling
+    ? ""
+    : direction === "prev"
+    ? styles.layerSlidePrev
+    : styles.layerSlideNext;
 
   return (
     <div className={styles.characterContainer}>

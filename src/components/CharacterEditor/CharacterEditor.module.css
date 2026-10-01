@@ -154,7 +154,7 @@
   gap: clamp(14px, 2vw, 20px);
 }
 
-/* Torph tarzı yumuşak açılan çekmece: grid-rows geçişi */
+/* drawer opens via the grid-rows transition */
 .drawer {
   display: grid;
   grid-template-rows: 0fr;

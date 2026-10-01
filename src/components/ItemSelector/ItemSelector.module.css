@@ -33,10 +33,6 @@
     transform 0.15s ease;
 }
 
-.tile:disabled {
-  pointer-events: none;
-}
-
 .tile img {
   max-width: 100%;
   max-height: 100%;
@@ -59,37 +55,6 @@ button.tile:hover {
   background: white;
   border-color: hsl(0deg, 0%, 8%);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* Slot makinesi: shuffle sırasında kareyi kaplayan dönen şerit */
-.slotStripOverlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  overflow: hidden;
-  background: white;
-  border-radius: inherit;
-}
-
-.slotStrip {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  will-change: transform;
-  transition: filter 180ms ease-out;
-}
-
-.slotStrip img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  flex-shrink: 0;
-  padding: 16%;
-  object-fit: contain;
-  user-select: none;
-}
-
-.counterSpinning {
-  opacity: 0.35;
 }
 
 .navRow {

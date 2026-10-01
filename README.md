@@ -28,7 +28,7 @@ That manifest is the single source of truth. The app never hardcodes how many it
 A few other things worth knowing:
 
 - A preloader fetches every item image once before the app shows up, so switching between items never pops in late. Color variants keep loading quietly in the background.
-- The randomize button runs a little slot machine animation on the selection tiles, built with anime.js. The result only commits once the reels stop, so the UI never flickers.
+- The randomize button makes the preview flash through random combos super fast, then the final bro lands with a blur reveal. It runs on anime.js and commits only once, so the UI never flickers.
 - Every icon in the UI is a hand drawn SVG that matches the wonky style of the character.
 
 ## Using the assets

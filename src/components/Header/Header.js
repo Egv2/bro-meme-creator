@@ -9,7 +9,7 @@ function Header() {
       <span className={styles.title}>BRO CREATOR</span>
       <a
         className={styles.githubButton}
-        href="https://github.com/egv2"
+        href="https://github.com/Egv2/bro-meme-creator"
         target="_blank"
         rel="noopener noreferrer"
       >

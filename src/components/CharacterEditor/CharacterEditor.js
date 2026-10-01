@@ -16,11 +16,14 @@ import getFileCount from "../../utils/getFileCount";
 import { defaultHair, defaultEyewear, defaultOutfit } from "../../constants";
 import Character from "../Character";
 import ItemSelector from "../ItemSelector";
-import { TILE_SPIN_CELLS } from "../ItemSelector/spinConfig";
 import TabNavigation from "../TabNavigation";
 import Preloader from "../Preloader";
 
 import styles from "./CharacterEditor.module.css";
+
+// flicker frame delays in ms, fast at first then easing into the result
+const FLICKER_DELAYS = [55, 55, 55, 60, 65, 75, 90, 105];
+const REVEAL_MS = 380;
 
 function VariantChevron({ flipped }) {
   return (
@@ -48,42 +51,36 @@ function CharacterEditor() {
   const [eyewear, setEyewear] = React.useState(defaultEyewear);
   const [outfit, setOutfit] = React.useState(defaultOutfit);
 
-  // Tab state
   const [activeTab, setActiveTab] = React.useState("hair");
 
-  // Varyasyon state'leri
   const [hairVariants, setHairVariants] = React.useState({});
   const [eyewearVariants, setEyewearVariants] = React.useState({});
   const [outfitVariants, setOutfitVariants] = React.useState({});
 
-  // Dropdown state'leri
   const [openHairVariant, setOpenHairVariant] = React.useState(false);
   const [openEyewearVariant, setOpenEyewearVariant] = React.useState(false);
   const [openOutfitVariant, setOpenOutfitVariant] = React.useState(false);
 
-  // Dosya sayıları
   const [numHairFiles, setNumHairFiles] = React.useState(0);
   const [numEyewearFiles, setNumEyewearFiles] = React.useState(0);
   const [numOutfitFiles, setNumOutfitFiles] = React.useState(0);
-
-  // Her aksesuar için varyasyon sayısı
   const [variantCounts, setVariantCounts] = React.useState({
     hair: [],
     eyewear: [],
     outfit: [],
   });
-
-  // Preloader durumu
   const [preloadProgress, setPreloadProgress] = React.useState(0);
   const [preloadDone, setPreloadDone] = React.useState(false);
 
-  // Randomize slot animasyonu ve geçiş yönü
   const [shuffling, setShuffling] = React.useState(false);
   const [direction, setDirection] = React.useState("next");
   const shuffleRunningRef = React.useRef(false);
 
-  // Slot planı ve reveal pop için DOM referansı
-  const [spinPlan, setSpinPlan] = React.useState(null);
+  // scratch combo that only feeds the preview while flashing
+  const [shuffleFrame, setShuffleFrame] = React.useState(null);
+  const flickerTimerRef = React.useRef(null);
+  // no layer slide on the shuffle commit, the blur reveal handles it
+  const skipSlideRef = React.useRef(false);
   const characterBoxRef = React.useRef(null);
 
   useEffect(() => {
@@ -102,12 +99,10 @@ function CharacterEditor() {
         outfit: outfitData.variants,
       });
 
-      // Her element için varsayılan varyant state'lerini oluştur
       const initialHairVariants = {};
       const initialEyewearVariants = {};
       const initialOutfitVariants = {};
 
-      // Her dosya için varyant state'i oluştur
       hairData.variants.forEach((variant) => {
         const fileNumber = parseInt(variant.file.split("-")[1]) - 1;
         initialHairVariants[fileNumber] = 0;
@@ -127,8 +122,7 @@ function CharacterEditor() {
       setEyewearVariants(initialEyewearVariants);
       setOutfitVariants(initialOutfitVariants);
 
-      // Kritik görselleri önden yükle: base body + her item'in ana hali.
-      // Preloader bunlar bitene kadar ekranda kalır, böylece geçişlerde pop-in olmaz.
+      // preload base body + every main item, the preloader gates on these
       const criticalUrls = ["/elements/base/base-body.png"];
       [
         ["hair", hairData.count],
@@ -145,7 +139,7 @@ function CharacterEditor() {
       );
       setPreloadDone(true);
 
-      // Varyantlar uygulama açıldıktan sonra arka planda yüklenir
+      // variants keep loading in the background
       const variantUrls = [];
       [
         ["hair", hairData.variants],
@@ -164,30 +158,28 @@ function CharacterEditor() {
     fetchFileCounts();
   }, []);
 
-  // Bileşen kaldırılırsa çalışan animasyonları durdur
+  // stop the flash chain and running animations on unmount
   useEffect(
     () => () => {
+      shuffleRunningRef.current = false;
+      clearTimeout(flickerTimerRef.current);
       if (characterBoxRef.current) anime.remove(characterBoxRef.current);
     },
     [],
   );
 
-  // Seçili öğe için variant sayısını al
   const getVariantCount = (type, index) => {
     const variants = variantCounts[type];
 
     if (!variants) return 0;
 
-    // Dosya adını oluştur (örn: "hair-1", "eyewear-1", "outfit-1")
     const fileName = `${type}-${index + 1}`;
 
-    // Bu dosya adına sahip varyantı bul
     const fileVariant = variants.find((v) => v.file === fileName);
 
     return fileVariant ? fileVariant.variantCount : 0;
   };
 
-  // Her element türü için ayrı variant değişiklik fonksiyonları
   const handleHairVariantChange = (newValue) => {
     setHairVariants((prev) => ({
       ...prev,
@@ -225,58 +217,43 @@ function CharacterEditor() {
 
   const randomIndex = (count) => Math.floor(Math.random() * (count || 1));
 
-  // Slot şeridi hücrelerini üret; son hücre hedef öğeye oturur
-  const buildSpinSequence = (count, finalIndex, cells) => {
-    const start = randomIndex(count);
-    const seq = Array.from({ length: cells }, (_, i) => (start + i) % count);
-    if (count > 1 && seq[cells - 2] === finalIndex) {
-      seq[cells - 2] = (finalIndex + 1) % count;
-    }
-    seq[cells - 1] = finalIndex;
-    return seq;
-  };
-
-  // Slot makinesi randomize: shuffle boyunca seçim state'leri dokunulmaz,
-  // soldaki 3 kare aktif sekmenin öğeleriyle döner; sonuç en sonda tek
-  // seferde commit edilir (reveal). Karakter de o anda güncellenir.
+  // flash the preview through random combos, then commit the result in one
+  // render and sharpen the character in from a blur
   const handleRandomize = () => {
     if (shuffleRunningRef.current) return;
     if (!numHairFiles || !numEyewearFiles || !numOutfitFiles) return;
     shuffleRunningRef.current = true;
+    setShuffling(true);
 
-    const totals = {
-      hair: numHairFiles,
-      eyewear: numEyewearFiles,
-      outfit: numOutfitFiles,
-    };
     const result = pickRandomSetFor(
       randomIndex(numHairFiles),
       randomIndex(numEyewearFiles),
       randomIndex(numOutfitFiles),
     );
 
-    // 3 kare sırayla: prev / final / next konumlarına oturur
-    const finalIndex = result[activeTab];
-    const total = totals[activeTab];
-    const landing = [
-      (finalIndex - 1 + total) % total,
-      finalIndex,
-      (finalIndex + 1) % total,
-    ];
-
-    setSpinPlan({
-      type: activeTab,
-      seqs: landing.map((land, tileIndex) =>
-        buildSpinSequence(total, land, TILE_SPIN_CELLS[tileIndex]),
-      ),
-      result,
-      token: Date.now(),
-    });
-    setShuffling(true);
+    let frame = 0;
+    const flash = () => {
+      if (!shuffleRunningRef.current) return;
+      if (frame < FLICKER_DELAYS.length) {
+        setShuffleFrame(
+          pickRandomSetFor(
+            randomIndex(numHairFiles),
+            randomIndex(numEyewearFiles),
+            randomIndex(numOutfitFiles),
+          ),
+        );
+        flickerTimerRef.current = setTimeout(flash, FLICKER_DELAYS[frame]);
+        frame += 1;
+      } else {
+        commitResult(result);
+      }
+    };
+    flickerTimerRef.current = setTimeout(flash, FLICKER_DELAYS[0]);
   };
 
-  // Şeritler durdu: tüm seçimi tek render'da commit et ve karakteri reveal et
-  const commitSpin = (result) => {
+  // single render commit, no layer slide, the blur reveal is the reveal
+  const commitResult = (result) => {
+    skipSlideRef.current = true;
     unstable_batchedUpdates(() => {
       setDirection("next");
       setHair(result.hair);
@@ -294,7 +271,7 @@ function CharacterEditor() {
         ...prev,
         [result.outfit]: result.outfitVariant,
       }));
-      setSpinPlan(null);
+      setShuffleFrame(null);
       setShuffling(false);
     });
     shuffleRunningRef.current = false;
@@ -305,24 +282,16 @@ function CharacterEditor() {
       anime.remove(characterEl);
       anime({
         targets: characterEl,
-        opacity: [0.25, 1],
-        scale: [0.965, 1],
-        duration: 320,
-        easing: "easeOutBack",
+        filter: ["blur(10px)", "blur(0px)"],
+        opacity: [0.5, 1],
+        scale: [0.97, 1],
+        duration: REVEAL_MS,
+        easing: "easeOutCubic",
       });
     });
   };
 
-  // Spin yarıda kesilirse (beklenmedik unmount) guard'ı serbest bırak
-  const cancelSpin = () => {
-    unstable_batchedUpdates(() => {
-      setSpinPlan(null);
-      setShuffling(false);
-    });
-    shuffleRunningRef.current = false;
-  };
-
-  // Shuffle sırasında sekme değiştirmek spin'i keseceği için kilitli
+  // tabs are locked while a shuffle is running
   const handleTabChange = (tabId) => {
     if (shuffleRunningRef.current) return;
     setActiveTab(tabId);
@@ -336,13 +305,16 @@ function CharacterEditor() {
     setter(currentValue === maxValue - 1 ? 0 : currentValue + 1);
   };
 
-  // Önizleme katmanlarının kayma yönünü belirle
   const goToPrevious = (setter, currentValue, maxValue) => {
+    if (shuffleRunningRef.current) return;
+    skipSlideRef.current = false;
     setDirection("prev");
     handlePrevious(setter, currentValue, maxValue);
   };
 
   const goToNext = (setter, currentValue, maxValue) => {
+    if (shuffleRunningRef.current) return;
+    skipSlideRef.current = false;
     setDirection("next");
     handleNext(setter, currentValue, maxValue);
   };
@@ -354,11 +326,9 @@ function CharacterEditor() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // Canvas boyutunu ayarla
     canvas.width = 800;
     canvas.height = 800;
 
-    // Tüm görselleri yükle ve canvas'a çiz
     const images = characterWrapper.querySelectorAll("img");
     let loadedImages = 0;
 
@@ -367,7 +337,6 @@ function CharacterEditor() {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       });
 
-      // Canvas'ı PNG olarak indir
       const link = document.createElement("a");
       link.download = "my-bro.png";
       link.href = canvas.toDataURL("image/png");
@@ -387,7 +356,6 @@ function CharacterEditor() {
     });
   };
 
-  // Tab konfigürasyonu
   const tabs = [
     { id: "hair", label: "Hair", icon: HairIcon },
     { id: "eyewear", label: "Eyewear", icon: GlassesIcon },
@@ -427,7 +395,6 @@ function CharacterEditor() {
     },
   };
 
-  // Aktif tab'ın içeriğini render et
   const renderTabContent = () => {
     const config = tabConfig[activeTab];
     if (!config) return null;
@@ -452,11 +419,9 @@ function CharacterEditor() {
           type={activeTab}
           current={current}
           total={total}
+          slideEnabled={!skipSlideRef.current}
           onPrevious={() => goToPrevious(setItem, current, total)}
           onNext={() => goToNext(setItem, current, total)}
-          spin={spinPlan}
-          onSpinComplete={() => commitSpin(spinPlan.result)}
-          onSpinCancel={cancelSpin}
         />
         {variantCount > 0 && (
           <div className={styles.variantWrapper}>
@@ -531,13 +496,24 @@ function CharacterEditor() {
         <h2 className={styles.previewTitle}>Preview</h2>
         <div className={styles.characterWrapper} ref={characterBoxRef}>
           <Character
-            hair={hair}
-            eyewear={eyewear}
-            outfit={outfit}
-            hairVariant={hairVariants[hair] || 0}
-            eyewearVariant={eyewearVariants[eyewear] || 0}
-            outfitVariant={outfitVariants[outfit] || 0}
+            hair={shuffleFrame ? shuffleFrame.hair : hair}
+            eyewear={shuffleFrame ? shuffleFrame.eyewear : eyewear}
+            outfit={shuffleFrame ? shuffleFrame.outfit : outfit}
+            hairVariant={
+              shuffleFrame ? shuffleFrame.hairVariant : hairVariants[hair] || 0
+            }
+            eyewearVariant={
+              shuffleFrame
+                ? shuffleFrame.eyewearVariant
+                : eyewearVariants[eyewear] || 0
+            }
+            outfitVariant={
+              shuffleFrame
+                ? shuffleFrame.outfitVariant
+                : outfitVariants[outfit] || 0
+            }
             direction={direction}
+            shuffling={Boolean(shuffleFrame) || skipSlideRef.current}
           />
         </div>
         <div className={styles.buttonRow}>
