@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "../icons";
 import styles from "./ItemSelector.module.css";
+import { elementUrl } from "../../utils/elementUrl";
 
 function ItemSelector({
   title,
@@ -30,7 +31,7 @@ function ItemSelector({
 
   const getImagePath = (index) => {
     if (!type) return null;
-    return `/elements/${type}/${type}-${index + 1}.png`;
+    return elementUrl(`/elements/${type}/${type}-${index + 1}.png`);
   };
 
   // no slide on the shuffle commit, the result just stays put

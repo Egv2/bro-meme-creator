@@ -11,6 +11,7 @@ import {
   DownloadIcon,
 } from "../icons";
 import { preloadImages } from "../../utils/preload";
+import { elementUrl, originalElementUrl } from "../../utils/elementUrl";
 import getFileCount from "../../utils/getFileCount";
 
 import { defaultHair, defaultEyewear, defaultOutfit } from "../../constants";
@@ -123,14 +124,14 @@ function CharacterEditor() {
       setOutfitVariants(initialOutfitVariants);
 
       // preload base body + every main item, the preloader gates on these
-      const criticalUrls = ["/elements/base/base-body.png"];
+      const criticalUrls = [elementUrl("/elements/base/base-body.png")];
       [
         ["hair", hairData.count],
         ["eyewear", eyewearData.count],
         ["outfit", outfitData.count],
       ].forEach(([type, count]) => {
         for (let i = 1; i <= count; i += 1) {
-          criticalUrls.push(`/elements/${type}/${type}-${i}.png`);
+          criticalUrls.push(elementUrl(`/elements/${type}/${type}-${i}.png`));
         }
       });
 
@@ -148,7 +149,7 @@ function CharacterEditor() {
       ].forEach(([type, files]) => {
         files.forEach(({ file, variantCount }) => {
           for (let v = 1; v <= variantCount; v += 1) {
-            variantUrls.push(`/elements/${type}/${file}-v${v}.png`);
+            variantUrls.push(elementUrl(`/elements/${type}/${file}-v${v}.png`));
           }
         });
       });
@@ -320,39 +321,43 @@ function CharacterEditor() {
   };
 
   const handleDownload = () => {
-    const characterWrapper = document.querySelector(
-      `.${styles.characterWrapper}`,
-    );
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    canvas.width = 800;
-    canvas.height = 800;
+    canvas.width = 1000;
+    canvas.height = 1000;
 
-    const images = characterWrapper.querySelectorAll("img");
-    let loadedImages = 0;
+    const suffix = (variant) => (variant > 0 ? `-v${variant + 1}` : "");
+    const layerPaths = [
+      "/elements/base/base-body.png",
+      `/elements/hair/hair-${hair + 1}${suffix(hairVariants[hair] || 0)}.png`,
+      `/elements/eyewear/eyewear-${eyewear + 1}${suffix(
+        eyewearVariants[eyewear] || 0,
+      )}.png`,
+      `/elements/outfit/outfit-${outfit + 1}${suffix(
+        outfitVariants[outfit] || 0,
+      )}.png`,
+    ];
 
-    const drawImages = () => {
-      images.forEach((img) => {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      });
+    const loadedLayers = [];
 
-      const link = document.createElement("a");
-      link.download = "my-bro.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    };
+    layerPaths.forEach((path, index) => {
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        loadedLayers[index] = img;
+        if (loadedLayers.filter(Boolean).length === layerPaths.length) {
+          loadedLayers.forEach((layer) => {
+            ctx.drawImage(layer, 0, 0, canvas.width, canvas.height);
+          });
 
-    images.forEach((img) => {
-      const newImg = new Image();
-      newImg.crossOrigin = "Anonymous";
-      newImg.onload = () => {
-        loadedImages++;
-        if (loadedImages === images.length) {
-          drawImages();
+          const link = document.createElement("a");
+          link.download = "my-bro.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
         }
       };
-      newImg.src = img.src;
+      img.src = originalElementUrl(path);
     });
   };
 

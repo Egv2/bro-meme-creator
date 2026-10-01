@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Character.module.css";
+import { elementUrl } from "../../utils/elementUrl";
 
 function Character({
   hair,
@@ -15,15 +16,15 @@ function Character({
   const [eyewearLoaded, setEyewearLoaded] = useState(true);
   const [outfitLoaded, setOutfitLoaded] = useState(true);
 
-  const hairSrc = `/elements/hair/hair-${hair + 1}${
+  const hairSrc = elementUrl(`/elements/hair/hair-${hair + 1}${
     hairVariant > 0 ? `-v${hairVariant + 1}` : ""
-  }.png`;
-  const eyewearSrc = `/elements/eyewear/eyewear-${eyewear + 1}${
+  }.png`);
+  const eyewearSrc = elementUrl(`/elements/eyewear/eyewear-${eyewear + 1}${
     eyewearVariant > 0 ? `-v${eyewearVariant + 1}` : ""
-  }.png`;
-  const outfitSrc = `/elements/outfit/outfit-${outfit + 1}${
+  }.png`);
+  const outfitSrc = elementUrl(`/elements/outfit/outfit-${outfit + 1}${
     outfitVariant > 0 ? `-v${outfitVariant + 1}` : ""
-  }.png`;
+  }.png`);
 
   useEffect(() => {
     setHairLoaded(true);
@@ -47,7 +48,7 @@ function Character({
   return (
     <div className={styles.characterContainer}>
       <img
-        src="/elements/base/base-body.png"
+        src={elementUrl("/elements/base/base-body.png")}
         alt="Base body"
         className={styles.baseLayer}
       />
