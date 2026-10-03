@@ -26,3 +26,7 @@ yarn-error.log*
 .wrangler
 # single package manager: bun only
 package-lock.json
+
+# assets live in R2 (br01.tqrc.org); keep heavy media out of the repo
+/public/elements
+/original-assets

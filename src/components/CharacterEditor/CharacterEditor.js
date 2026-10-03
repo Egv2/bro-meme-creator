@@ -123,25 +123,31 @@ function CharacterEditor() {
       setEyewearVariants(initialEyewearVariants);
       setOutfitVariants(initialOutfitVariants);
 
-      // preload base body + every main item, the preloader gates on these
-      const criticalUrls = [elementUrl("/elements/base/base-body.png")];
-      [
-        ["hair", hairData.count],
-        ["eyewear", eyewearData.count],
-        ["outfit", outfitData.count],
-      ].forEach(([type, count]) => {
-        for (let i = 1; i <= count; i += 1) {
-          criticalUrls.push(elementUrl(`/elements/${type}/${type}-${i}.png`));
-        }
-      });
+      // the preloader only gates on the default combo shown at first paint;
+      // every other item and variant streams in behind it from the CDN
+      const criticalUrls = [
+        elementUrl("/elements/base/base-body.png"),
+        elementUrl(`/elements/hair/hair-${defaultHair + 1}.png`),
+        elementUrl(`/elements/eyewear/eyewear-${defaultEyewear + 1}.png`),
+        elementUrl(`/elements/outfit/outfit-${defaultOutfit + 1}.png`),
+      ];
 
       await preloadImages(criticalUrls, (loaded, total) =>
         setPreloadProgress(loaded / total),
       );
       setPreloadDone(true);
 
-      // variants keep loading in the background
-      const variantUrls = [];
+      // remaining items and variants keep loading in the background
+      const backgroundUrls = [];
+      [
+        ["hair", hairData.count],
+        ["eyewear", eyewearData.count],
+        ["outfit", outfitData.count],
+      ].forEach(([type, count]) => {
+        for (let i = 1; i <= count; i += 1) {
+          backgroundUrls.push(elementUrl(`/elements/${type}/${type}-${i}.png`));
+        }
+      });
       [
         ["hair", hairData.variants],
         ["eyewear", eyewearData.variants],
@@ -149,11 +155,11 @@ function CharacterEditor() {
       ].forEach(([type, files]) => {
         files.forEach(({ file, variantCount }) => {
           for (let v = 1; v <= variantCount; v += 1) {
-            variantUrls.push(elementUrl(`/elements/${type}/${file}-v${v}.png`));
+            backgroundUrls.push(elementUrl(`/elements/${type}/${file}-v${v}.png`));
           }
         });
       });
-      preloadImages(variantUrls);
+      preloadImages(backgroundUrls);
     }
 
     fetchFileCounts();

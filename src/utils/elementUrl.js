@@ -1,5 +1,6 @@
 // Compressed layers for preview; originals (5000x5000) only fetched at download time.
-const R2_BASE = "https://pub-4754cac80f48428a9ce827610314079e.r2.dev";
+// Custom domain on the R2 bucket (proxied) — r2.dev URLs are rate-limited and never edge-cached.
+const R2_BASE = "https://br01.tqrc.org";
 const R2_ORIGINAL_BASE = `${R2_BASE}/original`;
 
 export function elementUrl(path) {

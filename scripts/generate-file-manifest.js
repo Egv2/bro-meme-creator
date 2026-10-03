@@ -7,6 +7,20 @@ const OUTPUT_FILE = path.join(__dirname, "../public/file-manifest.json");
 function generateManifest() {
   const manifest = {};
 
+  // asset PNGs live in R2 now; without a local public/elements copy the
+  // committed manifest is the source of truth and must not be overwritten
+  if (!fs.existsSync(ELEMENTS_DIR)) {
+    if (fs.existsSync(OUTPUT_FILE)) {
+      console.log(
+        "public/elements not found (assets served from R2); keeping existing manifest",
+      );
+      return;
+    }
+    console.warn(
+      `Directory not found: ${ELEMENTS_DIR} and no manifest exists yet`,
+    );
+  }
+
   const directories = ["hair", "eyewear", "outfit"];
 
   directories.forEach((directory) => {
