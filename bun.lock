@@ -1,10 +1,11 @@
 {
   "lockfileVersion": 1,
-  "configVersion": 1,
   "workspaces": {
     "": {
       "name": "character-creator",
       "dependencies": {
+        "@phosphor-icons/react": "^2.1.10",
+        "animejs": "^3.2.2",
         "react": "17.0.1",
         "react-dom": "17.0.1",
         "react-scripts": "4.0.1",
@@ -336,6 +337,8 @@
 
     "@npmcli/move-file": ["@npmcli/move-file@1.1.2", "", { "dependencies": { "mkdirp": "^1.0.4", "rimraf": "^3.0.2" } }, "sha512-1SUf/Cg2GzGDyaf15aR9St9TWlb+XvbZXWpDx8YKs7MLzMH/BCeopv+y9vzrzgkfykCGuWOlSu3mZhj2+FQcrg=="],
 
+    "@phosphor-icons/react": ["@phosphor-icons/react@2.1.10", "", { "peerDependencies": { "react": ">= 16.8", "react-dom": ">= 16.8" } }, "sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA=="],
+
     "@pmmmwh/react-refresh-webpack-plugin": ["@pmmmwh/react-refresh-webpack-plugin@0.4.2", "", { "dependencies": { "ansi-html": "^0.0.7", "error-stack-parser": "^2.0.6", "html-entities": "^1.2.1", "native-url": "^0.2.6", "schema-utils": "^2.6.5", "source-map": "^0.7.3" }, "peerDependencies": { "@types/webpack": "4.x", "react-refresh": "^0.8.3", "sockjs-client": "^1.4.0", "type-fest": "^0.13.1", "webpack": ">=4.43.0 <6.0.0", "webpack-dev-server": "3.x", "webpack-hot-middleware": "2.x", "webpack-plugin-serve": "0.x || 1.x" }, "optionalPeers": ["@types/webpack", "sockjs-client", "type-fest", "webpack-dev-server", "webpack-hot-middleware", "webpack-plugin-serve"] }, "sha512-Loc4UDGutcZ+Bd56hBInkm6JyjyCwWy4t2wcDXzN8EDPANgVRj0VP8Nxn0Zq2pc+WKauZwEivQgbDGg4xZO20A=="],
 
     "@rollup/plugin-node-resolve": ["@rollup/plugin-node-resolve@7.1.3", "", { "dependencies": { "@rollup/pluginutils": "^3.0.8", "@types/resolve": "0.0.8", "builtin-modules": "^3.1.0", "is-module": "^1.0.0", "resolve": "^1.14.2" }, "peerDependencies": { "rollup": "^1.20.0||^2.0.0" } }, "sha512-RxtSL3XmdTAE2byxekYLnx+98kEUOrPHF/KRVjLH+DEIHy6kjIw7YINQzn+NXiH/NTrQLAwYs0GWB+csWygA9Q=="],
@@ -521,6 +524,8 @@
     "ajv-keywords": ["ajv-keywords@3.5.2", "", { "peerDependencies": { "ajv": "^6.9.1" } }, "sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ=="],
 
     "alphanum-sort": ["alphanum-sort@1.0.2", "", {}, "sha512-0FcBfdcmaumGPQ0qPn7Q5qTgz/ooXgIyp1rf8ik5bGX8mpE2YHjC0P/eyQvxu1GURYQgq9ozf2mteQ5ZD9YiyQ=="],
+
+    "animejs": ["animejs@3.2.2", "", {}, "sha512-Ao95qWLpDPXXM+WrmwcKbl6uNlC5tjnowlaRYtuVDHHoygjtIPfDUoK9NthrlZsQSKjZXlmji2TrBUAVbiH0LQ=="],
 
     "ansi-colors": ["ansi-colors@4.1.3", "", {}, "sha512-/6w/C21Pm1A7aZitlI5Ni/2J6FFQN8i1Cvz3kHABAAbw93v/NlvKdVOqz7CCWz/3iv/JplRSEEZ83XION15ovw=="],
 

@@ -24,3 +24,5 @@ yarn-error.log*
 
 .eslintcache
 .wrangler
+# single package manager: bun only
+package-lock.json
